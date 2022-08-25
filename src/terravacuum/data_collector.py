@@ -44,4 +44,5 @@ class DataCollectorPluginSocket:
 
 
 def collect_data(source: str) -> Optional[Any]:
+    """Collect the data from the given source. A plugin must be registered to this source."""
     return DataCollectorPluginSocket.get_plugin(source).collect()
