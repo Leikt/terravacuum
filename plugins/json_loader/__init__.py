@@ -29,3 +29,4 @@ class JsonFileLoader:
 
         with open(filename, 'w') as file:
             file.write(json.dumps(data))
+        return True

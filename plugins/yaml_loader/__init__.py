@@ -28,3 +28,4 @@ class YamlFileLoader:
 
         with open(filename, 'w') as file:
             file.write(yaml.dump(data))
+        return True
