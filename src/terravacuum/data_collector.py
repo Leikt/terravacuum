@@ -1,3 +1,4 @@
+import logging
 from typing import Protocol, Optional, Any
 
 
@@ -30,6 +31,7 @@ class DataCollectorPluginSocket:
             if plugin in cls.__plugins.values():
                 continue
             if source in cls.__plugins:
+                logging.warning('A data collector is already registered on source "{}"'.format(source))
                 continue
 
             cls.__plugins[source] = plugin
