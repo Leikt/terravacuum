@@ -2,6 +2,7 @@ from typing import Protocol, Optional, Any
 
 
 class DataCollectorNotFoundError(Exception):
+    """Exception raised when a data collector is requested but not found."""
     def __init__(self, source: str):
         self.source = source
         self.message = 'Data collector "{}" was not found.'.format(source)

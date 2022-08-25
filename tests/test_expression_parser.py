@@ -8,7 +8,7 @@ class TestExpressionParser(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         register_plugin_sockets()
-        PluginLoader.load_plugin('plugins.core_expression_parser')
+        PluginLoader.load_plugin('terravacuum.core_plugins.expression_parser')
 
     def test_plain_expression(self):
         expr = 'SomePlainValue'
