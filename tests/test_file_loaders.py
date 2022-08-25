@@ -1,7 +1,7 @@
 import os.path
 import unittest
 
-from terravacuum_core import PluginLoader, register_plugin_sockets, load_file, save_to_file
+from terravacuum import PluginLoader, register_plugin_sockets, load_file, save_to_file
 
 
 class TestFileLoaders(unittest.TestCase):

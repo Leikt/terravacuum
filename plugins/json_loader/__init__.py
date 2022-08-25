@@ -1,7 +1,7 @@
 import json
 from typing import Optional, Any
 
-from terravacuum_core import PFileLoader
+from terravacuum import PFileLoader
 
 EXTENSION = '.json'
 

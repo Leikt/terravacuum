@@ -1,7 +1,7 @@
 import unittest
 
 from mock_plugin import MockSocket
-from terravacuum_core import PluginLoader
+from terravacuum import PluginLoader
 
 
 class TestPluginSystem(unittest.TestCase):

@@ -15,6 +15,8 @@ class PFileLoader(Protocol):
 
 
 class FileLoaderPluginSocket:
+    """Plugin socket for the file loading."""
+
     __plugins: list[PFileLoader] = []
 
     @classmethod
