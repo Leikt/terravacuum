@@ -23,11 +23,11 @@ class FileLoaderPluginSocket:
     def register(cls, module):
         if not hasattr(module, 'register_file_loaders'):
             return
-        for file_loader in module.register_file_loaders():
-            if file_loader in cls.__plugins:
+        for plugin in module.register_file_loaders():
+            if plugin in cls.__plugins:
                 continue
 
-            cls.__plugins.append(file_loader)
+            cls.__plugins.append(plugin)
 
     @classmethod
     def get_plugins(cls) -> list[PFileLoader]:

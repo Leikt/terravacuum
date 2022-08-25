@@ -7,3 +7,6 @@ def register_plugin_sockets():
 
     from .expression_parsing import ExpressionParserPluginSocket
     PluginLoader.register_plugin_socket(ExpressionParserPluginSocket)
+
+    from .data_collector import DataCollectorPluginSocket
+    PluginLoader.register_plugin_socket(DataCollectorPluginSocket)

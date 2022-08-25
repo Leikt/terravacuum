@@ -28,11 +28,11 @@ class ExpressionParserPluginSocket:
     def register(cls, module):
         if not hasattr(module, 'register_expression_parsers'):
             return
-        for file_loader in module.register_expression_parsers():
-            if file_loader in cls.__plugins:
+        for plugin in module.register_expression_parsers():
+            if plugin in cls.__plugins:
                 continue
 
-            cls.__plugins.append(file_loader)
+            cls.__plugins.append(plugin)
 
     @classmethod
     def get_plugins(cls) -> list[PExpressionParser]:
