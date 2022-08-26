@@ -10,3 +10,6 @@ def register_plugin_sockets():
 
     from .data_collector import DataCollectorPluginSocket
     PluginLoader.register_plugin_socket(DataCollectorPluginSocket)
+
+    from .component_factory import ComponentFactoryPluginSocket
+    PluginLoader.register_plugin_socket(ComponentFactoryPluginSocket)
