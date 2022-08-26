@@ -1,17 +1,19 @@
 from dataclasses import dataclass
-from typing import Union, Optional
 
-from terravacuum import PComponent, ComponentFactoryRegistration
+from terravacuum import ComponentFactoryRegistration, ComponentRegistration, component_factory, ComponentFactoryReturn
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
     yield 'mock', fabric_mock_component
 
 
-def fabric_mock_component(data: Optional[Union[str, list, dict]]) -> PComponent:
-    if not isinstance(data, dict):
-        raise TypeError("MockComponent only accept data as a dict.")
-    return MockComponent(**data)
+def register_components() -> ComponentRegistration:
+    yield 'mocker', MockComponent
+
+
+@component_factory(parse_string=False)
+def fabric_mock_component(data: dict) -> ComponentFactoryReturn:
+    return 'mocker', data
 
 
 @dataclass

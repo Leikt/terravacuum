@@ -5,5 +5,7 @@ from .context import Context
 from .expression_parsing import PExpressionParser, parse_expression, ExpressionParsingResult
 from .data_collector import PDataCollector, DataCollectorNotFoundError, collect_data
 from .core_plugins import register_core_plugins
-from .component_factory import ComponentFactory, ComponentFactoryNotFound, PComponent, create_component, \
-    ComponentFactoryRegistration
+from .component_factory import ComponentFactory, ComponentFactoryNotFound, PComponent, get_component_factory, \
+    ComponentFactoryRegistration, ComponentFactoryReturn, WrongArgumentForComponentConstructor
+from .component import ComponentNotFound, PComponent, get_component_class, ComponentRegistration
+from .factory_decorators import component_factory

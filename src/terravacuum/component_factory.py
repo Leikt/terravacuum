@@ -1,5 +1,7 @@
 import logging
-from typing import Protocol, Optional, Callable, Union
+from typing import Optional, Callable, Union
+
+from .component import PComponent
 
 
 class ComponentFactoryNotFound(Exception):
@@ -11,8 +13,13 @@ class ComponentFactoryNotFound(Exception):
         super().__init__(self.message)
 
 
-class PComponent(Protocol):
-    """A component of the template, it is able to process data to a renderer"""
+class WrongArgumentForComponentConstructor(Exception):
+    """Exception raised when the wrong arguments are passed to a component constructor."""
+
+    def __init__(self, component_class: type):
+        self.component_class = component_class
+        self.message = 'Wrong arguments for the component constructor "{}"'.format(component_class)
+        super().__init__(self.message)
 
 
 ComponentFactory = Callable[[Optional[Union[str, list, dict]]], PComponent]
@@ -21,9 +28,12 @@ ComponentFactory = Callable[[Optional[Union[str, list, dict]]], PComponent]
 ComponentFactoryRegistration = tuple[str, ComponentFactory]
 """Return type for the registration function"""
 
+ComponentFactoryReturn = tuple[str, dict]
+"""Return type when the function uses the component_factory decorator"""
+
 
 class ComponentFactoryPluginSocket:
-    """Plugin socket for the file loading."""
+    """Plugin socket for the component factories."""
 
     __factories: dict[str, ComponentFactory] = {}
 
@@ -45,6 +55,8 @@ class ComponentFactoryPluginSocket:
         return cls.__factories[keyword]
 
 
-def create_component(keyword: str, data: Optional[Union[str, list, dict]]) -> PComponent:
-    """Collect the data from the given source. A plugin must be registered to this source."""
-    return ComponentFactoryPluginSocket.get_factory(keyword)(data)
+def get_component_factory(keyword: str) -> ComponentFactory:
+    """Retrieve the component factory associated with the given keyword. Raise a ComponentFactoryNotFound error if
+    it's missing."""
+    return ComponentFactoryPluginSocket.get_factory(keyword)
+

@@ -13,3 +13,6 @@ def register_plugin_sockets():
 
     from .component_factory import ComponentFactoryPluginSocket
     PluginLoader.register_plugin_socket(ComponentFactoryPluginSocket)
+
+    from .component import ComponentPluginSocket
+    PluginLoader.register_plugin_socket(ComponentPluginSocket)
