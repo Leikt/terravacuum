@@ -21,7 +21,8 @@ def fabric_mock_component(data: dict) -> ComponentFactoryReturn:
 
 @component_factory()
 def fabric_mock_parent_component(data: dict) -> ComponentFactoryReturn:
-    child: PComponent = get_component_factory('mock')(data['mock_child'])
+    mock_factory = get_component_factory('mock')
+    child = mock_factory(data['mock_child'])
     data = {
         'destination': data['destination'],
         'child': child
