@@ -1,10 +1,10 @@
 import logging
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from .component import PComponent
 from .context import Context
 
-Renderer = Callable[[Context, PComponent, Optional[int]], Any]
+Renderer = Callable[[Context, PComponent], Any]
 
 
 class RendererNotFound(Exception):

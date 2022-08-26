@@ -20,7 +20,7 @@ class TestRenderer(unittest.TestCase):
         renderer = get_renderer(component.get_renderer_name())
 
         expected = f"mock_component[name = {component.name} first_name = {component.first_name}]"
-        actual = renderer(context, component, 0)
+        actual = renderer(context, component)
         self.assertEqual(expected, actual)
 
     def test_simple_renderer_with_expression(self):
@@ -30,7 +30,7 @@ class TestRenderer(unittest.TestCase):
         renderer = get_renderer('mock_with_expression')
 
         expected = f"mock_component[name = {context.variables['name']} first_name = {context.data['name']}]"
-        actual = renderer(context, component, 0)
+        actual = renderer(context, component)
         self.assertEqual(expected, actual)
 
     def test_render_child(self):
