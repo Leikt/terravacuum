@@ -19,3 +19,6 @@ def register_plugin_sockets():
 
     from .renderer import RendererPluginSocket
     PluginLoader.register_plugin_socket(RendererPluginSocket)
+
+    from .renderer_factory import RendererFactoryPluginSocket
+    PluginLoader.register_plugin_socket(RendererFactoryPluginSocket)

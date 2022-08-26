@@ -1,10 +1,13 @@
 import logging
-from typing import Any, Callable
+from typing import Any, Protocol
 
 from .component import PComponent
 from .context import Context
 
-Renderer = Callable[[Context, PComponent], Any]
+
+class PRenderer(Protocol):
+    def render(self, context: Context, component: PComponent) -> Any:
+        """Render the component."""
 
 
 class RendererNotFound(Exception):
@@ -19,7 +22,7 @@ class RendererNotFound(Exception):
 class RendererPluginSocket:
     """Plugin socket for the renderers."""
 
-    __renderers: dict[str, Renderer] = {}
+    __renderers: dict[str, type] = {}
 
     @classmethod
     def register(cls, module):
@@ -33,12 +36,12 @@ class RendererPluginSocket:
             cls.__renderers[keyword] = renderer
 
     @classmethod
-    def get_renderer(cls, keyword: str) -> Renderer:
+    def get_renderer_class(cls, keyword: str) -> type:
         if keyword not in cls.__renderers:
             raise RendererNotFound(keyword)
         return cls.__renderers[keyword]
 
 
-def get_renderer(keyword: str) -> Renderer:
+def get_renderer_class(keyword: str) -> type:
     """Get the renderer associated with the given keyword. Raise a RendererNotFound if it's missing"""
-    return RendererPluginSocket.get_renderer(keyword)
+    return RendererPluginSocket.get_renderer_class(keyword)
