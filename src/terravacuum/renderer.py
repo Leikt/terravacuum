@@ -1,10 +1,10 @@
 import logging
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 from .component import PComponent
 from .context import Context
 
-Renderer = Callable[[Context, PComponent], Any]
+Renderer = Callable[[Context, PComponent, Optional[int]], Any]
 
 
 class RendererNotFound(Exception):
@@ -25,12 +25,12 @@ class RendererPluginSocket:
     def register(cls, module):
         if not hasattr(module, 'register_renderers'):
             return
-        for keyword, factory in module.register_renderers():
+        for keyword, renderer in module.register_renderers():
             if keyword in cls.__renderers:
                 logging.warning('A renderer is already registered on keyword "{}"'.format(keyword))
                 continue
 
-            cls.__renderers[keyword] = factory
+            cls.__renderers[keyword] = renderer
 
     @classmethod
     def get_renderer(cls, keyword: str) -> Renderer:

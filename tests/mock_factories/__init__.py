@@ -48,13 +48,22 @@ class MockComponent:
     name: str
     first_name: str
 
+    def get_renderer_name(self) -> str:
+        return 'mock'
+
 
 @dataclass
 class MockParentComponent:
     destination: str
     child: PComponent
 
+    def get_renderer_name(self) -> str:
+        return 'mock_parent'
+
 
 @dataclass
 class MockWithChildrenComponent:
     children: list[PComponent]
+
+    def get_renderer_name(self) -> str:
+        return 'mock_with_children'

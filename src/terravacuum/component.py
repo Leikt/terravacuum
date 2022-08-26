@@ -14,6 +14,9 @@ class ComponentNotFound(Exception):
 class PComponent(Protocol):
     """A component of the template, it is able to process data to a renderer"""
 
+    def get_renderer_name(self) -> str:
+        """Return the name of the component's renderer."""
+
 
 ComponentRegistration = tuple[str, type]
 
@@ -44,4 +47,3 @@ class ComponentPluginSocket:
 def get_component_class(keyword: str) -> type:
     """Get the component associated with the given keyword. Raise a ComponentNotFound if it's missing"""
     return ComponentPluginSocket.get_component_class(keyword)
-
