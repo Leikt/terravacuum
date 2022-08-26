@@ -62,7 +62,7 @@ def create_child(data: dict) -> PComponent:
 def _create_component(keyword: str, data: dict) -> PComponent:
     klass = ComponentPluginSocket.get_component_class(keyword)
     try:
-        component = klass(**data)
+        component: PComponent = klass(**data)
         return component
     except TypeError:
         raise WrongArgumentForComponentConstructor(klass)

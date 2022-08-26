@@ -44,3 +44,4 @@ class ComponentPluginSocket:
 def get_component_class(keyword: str) -> type:
     """Get the component associated with the given keyword. Raise a ComponentNotFound if it's missing"""
     return ComponentPluginSocket.get_component_class(keyword)
+

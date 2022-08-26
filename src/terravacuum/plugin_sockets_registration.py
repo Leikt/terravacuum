@@ -1,5 +1,5 @@
 def register_plugin_sockets():
-    """Initialize the plugin sockets. Please call this before loading any plugin."""
+    """Initialize the plugin sockets. Call this before loading any plugin."""
     from .plugin_loader import PluginLoader
 
     from .file_loader import FileLoaderPluginSocket
@@ -16,3 +16,6 @@ def register_plugin_sockets():
 
     from .component import ComponentPluginSocket
     PluginLoader.register_plugin_socket(ComponentPluginSocket)
+
+    from .renderer import RendererPluginSocket
+    PluginLoader.register_plugin_socket(RendererPluginSocket)

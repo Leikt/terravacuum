@@ -10,3 +10,4 @@ from .component_factory import ComponentFactory, ComponentFactoryNotFound, PComp
 from .component import ComponentNotFound, PComponent, get_component_class, ComponentRegistration
 from .component_factory_helpers import component_factory, WrongDataTypeError, MissingChildrenDataError, \
     TooManyChildComponents, create_child
+from .renderer import Renderer, RendererNotFound, get_renderer
