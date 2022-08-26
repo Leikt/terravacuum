@@ -31,7 +31,7 @@ class TooManyChildComponents(Exception):
         super().__init__(self.message)
 
 
-def component_factory(inline_arguments: bool = False, create_children: bool = False):
+def component_factory(inline_arguments: bool = False, create_children: bool = False, children_key: str = 'children'):
     """Decorator that create the concrete component from the returned data"""
 
     def decorator(function):
@@ -39,7 +39,7 @@ def component_factory(inline_arguments: bool = False, create_children: bool = Fa
             if inline_arguments:
                 data = _parse_string_arguments(data)
             if create_children:
-                data = _create_children(data)
+                data = _create_children(data, children_key)
             keyword, data = function(data, *args, **kwargs)
             return _create_component(keyword, data)
 
@@ -80,13 +80,13 @@ def _parse_string_arguments(data: Any) -> Any:
     return data
 
 
-def _create_children(data: dict) -> dict:
+def _create_children(data: dict, children_key: str) -> dict:
     if not isinstance(data, dict):
         raise WrongDataTypeError(dict, type(data))
-    if 'children' not in data:
+    if children_key not in data:
         raise MissingChildrenDataError()
     children: list[PComponent] = []
-    for child_data in data['children']:
+    for child_data in data[children_key]:
         children.append(create_child(child_data))
-    data['children'] = children
+    data[children_key] = children
     return data
