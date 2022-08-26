@@ -8,4 +8,4 @@ from .core_plugins import register_core_plugins
 from .component_factory import ComponentFactory, ComponentFactoryNotFound, PComponent, get_component_factory, \
     ComponentFactoryRegistration, ComponentFactoryReturn, WrongArgumentForComponentConstructor
 from .component import ComponentNotFound, PComponent, get_component_class, ComponentRegistration
-from .factory_decorators import component_factory
+from .component_factory_decorators import component_factory
