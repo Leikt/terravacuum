@@ -1,8 +1,9 @@
 import unittest
 
-from mock_factories import MockComponent, MockParentComponent
+from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
 from terravacuum import register_plugin_sockets, PluginLoader, get_component_factory, \
-    WrongArgumentForComponentConstructor, ComponentFactoryNotFound
+    WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, MissingChildrenDataError, \
+    TooManyChildComponents
 
 
 class TestComponentFactories(unittest.TestCase):
@@ -53,3 +54,41 @@ class TestComponentFactories(unittest.TestCase):
             factory(None)
             factory("")
             factory([])
+
+    def test_auto_children(self):
+        data = {
+            'children': [
+                {'mock': {'name': 'A', 'first_name': 'AA'}},
+                {'mock': {'name': 'B', 'first_name': 'BB'}}
+            ]
+        }
+        factory = get_component_factory('mock_auto_children')
+        component = factory(data)
+        self.assertIsInstance(component, MockWithChildrenComponent)
+        self.assertEqual(2, len(component.children))
+        self.assertIsInstance(component.children[0], MockComponent)
+
+    def test_auto_children_raises(self):
+        factory = get_component_factory('mock_auto_children')
+        with self.assertRaises(WrongDataTypeError):
+            factory(None)
+            factory({'children': 'wrong_type'})
+        with self.assertRaises(MissingChildrenDataError):
+            factory({})
+        with self.assertRaises(TooManyChildComponents):
+            factory({
+                'children': [
+                    {'mock1': {}, 'too_much': {}}
+                ]
+            })
+
+    def test_inline_arguments(self):
+        factory = get_component_factory('mock_with_inline_arguments')
+        component = factory('name=MIETTAUX first_name=George')
+        self.assertIsInstance(component, MockComponent)
+        self.assertEqual('George', component.first_name)
+        self.assertEqual('MIETTAUX', component.name)
+
+    def test_inline_argument_syntax(self):
+        factory = get_component_factory('mock_with_inline_arguments')
+        factory('name==é22 first_name=plrplgreplegp"')
