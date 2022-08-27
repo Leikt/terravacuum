@@ -12,7 +12,7 @@ def register_components() -> ComponentRegistration:
     # yield 'loop', LoopComponent
     # yield 'include', IncludeComponent
     yield 'comment', CommentComponent
-    yield 'blank_line', BlankLinesComponent
+    yield 'blank_lines', BlankLinesComponent
 
 
 @dataclass
