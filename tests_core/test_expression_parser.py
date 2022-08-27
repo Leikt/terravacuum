@@ -50,3 +50,8 @@ class TestExpressionParser(unittest.TestCase):
         context = create_context(data, {})
         expr = "$.tags[?(@.Key == 'Name')].Value"
         self.assertEqual(data['tags'][0]['Value'], parse_expression(expr, context))
+
+    def test_quote_string(self):
+        expr = "some word with spaces"
+        result = parse_expression(expr, create_context({}, {}), True)
+        self.assertEqual("\"{}\"".format(expr), result)

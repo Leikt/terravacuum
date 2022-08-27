@@ -39,13 +39,15 @@ class ExpressionParserPluginSocket:
         return cls.__plugins
 
 
-def parse_expression(expr: str, context: Context) -> Optional[Any]:
+def parse_expression(expr: str, context: Context, quote_string_with_spaces: bool = False) -> Optional[Any]:
     """Parse the given expression in the context.
     If no parser is able to parse the expression, it is return unchanged."""
+    result = expr
     for plugin in ExpressionParserPluginSocket.get_plugins():
         code, result = plugin.parse(expr, context)
-        if code == ExpressionParsingResult.SUCCESS:
-            return result
         if code == ExpressionParsingResult.FAILURE:
             logging.error('Unable to parse the expression "{}"'.format(expr))
-    return expr
+
+    if isinstance(result, str) and quote_string_with_spaces and ' ' in result:
+        result = "\"{}\"".format(result)
+    return result
