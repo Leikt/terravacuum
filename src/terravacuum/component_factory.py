@@ -1,6 +1,7 @@
 import logging
 from typing import Optional, Callable, Union
 
+from .plugin_system import register_plugin_socket
 from .component import PComponent
 
 
@@ -31,7 +32,7 @@ ComponentFactoryRegistration = tuple[str, ComponentFactory]
 ComponentFactoryReturn = tuple[str, dict]
 """Return type when the function uses the component_factory decorator"""
 
-
+@register_plugin_socket
 class ComponentFactoryPluginSocket:
     """Plugin socket for the component factories."""
 

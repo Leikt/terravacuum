@@ -2,7 +2,8 @@ import logging
 from enum import Enum
 from typing import Protocol, Any, Optional
 
-from terravacuum import Context
+from .plugin_system import register_plugin_socket
+from .context import Context
 
 
 class ExpressionParsingResult(Enum):
@@ -19,6 +20,7 @@ class PExpressionParser(Protocol):
         """Parse the expression and return the data."""
 
 
+@register_plugin_socket
 class ExpressionParserPluginSocket:
     """Plugin socket for the expression parsers."""
 

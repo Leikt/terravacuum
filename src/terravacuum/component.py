@@ -1,6 +1,8 @@
 import logging
 from typing import Protocol
 
+from .plugin_system import register_plugin_socket
+
 
 class ComponentNotFound(Exception):
     """Exception raised when a component is requested but not found."""
@@ -20,7 +22,7 @@ class PComponent(Protocol):
 
 ComponentRegistration = tuple[str, type]
 
-
+@register_plugin_socket
 class ComponentPluginSocket:
     """Plugin socket for the components."""
 

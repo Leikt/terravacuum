@@ -1,13 +1,12 @@
 import os.path
 import unittest
 
-from terravacuum import register_plugin_sockets, load_file, save_to_file, PluginLoader
+from terravacuum import load_file, save_to_file, PluginLoader
 
 
 class TestFileLoaders(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        register_plugin_sockets()
         PluginLoader.load_plugin('terravacuum.core_plugins.json_loader')
         PluginLoader.load_plugin('terravacuum.core_plugins.yaml_loader')
 

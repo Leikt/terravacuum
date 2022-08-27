@@ -1,6 +1,8 @@
 import logging
 from typing import Protocol, Optional, Any
 
+from .plugin_system import register_plugin_socket
+
 
 class PFileLoader(Protocol):
     """Specific file type loader."""
@@ -14,6 +16,7 @@ class PFileLoader(Protocol):
         """Try to save the data and return its ability to save the file."""
 
 
+@register_plugin_socket
 class FileLoaderPluginSocket:
     """Plugin socket for the file loading."""
 

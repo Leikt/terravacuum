@@ -1,7 +1,7 @@
 import unittest
 
 from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
-from terravacuum import register_plugin_sockets, PluginLoader, get_component_factory, \
+from terravacuum import PluginLoader, get_component_factory, \
     WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, MissingChildrenDataError, \
     TooManyChildComponents
 
@@ -9,7 +9,6 @@ from terravacuum import register_plugin_sockets, PluginLoader, get_component_fac
 class TestComponentFactories(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        register_plugin_sockets()
         PluginLoader.load_plugin('mock_factories')
 
     def test_mock_factory(self):

@@ -1,13 +1,12 @@
 import unittest
 
-from terravacuum import register_plugin_sockets, PluginLoader, parse_expression
+from terravacuum import PluginLoader, parse_expression
 from terravacuum.context import create_context
 
 
 class TestExpressionParser(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        register_plugin_sockets()
         PluginLoader.load_plugin('terravacuum.core_plugins.expression_parser')
 
     def test_plain_expression(self):

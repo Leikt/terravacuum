@@ -1,6 +1,8 @@
 import logging
 from typing import Protocol, Optional, Any
 
+from .plugin_system import register_plugin_socket
+
 
 class DataCollectorNotFoundError(Exception):
     """Exception raised when a data collector is requested but not found."""
@@ -17,7 +19,7 @@ class PDataCollector(Protocol):
     def collect() -> Optional[Any]:
         """Collect the data and return it"""
 
-
+@register_plugin_socket
 class DataCollectorPluginSocket:
     """Plugin socket for the file loading."""
 
