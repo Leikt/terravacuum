@@ -16,9 +16,3 @@ def register_plugin_sockets():
 
     from .component import ComponentPluginSocket
     PluginLoader.register_plugin_socket(ComponentPluginSocket)
-
-    from .renderer import RendererPluginSocket
-    PluginLoader.register_plugin_socket(RendererPluginSocket)
-
-    from .renderer_factory import RendererFactoryPluginSocket
-    PluginLoader.register_plugin_socket(RendererFactoryPluginSocket)
