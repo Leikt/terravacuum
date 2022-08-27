@@ -52,8 +52,4 @@ class TestMockData2Code(unittest.TestCase):
         function_renderer = function_renderer_factory(0)
 
         actual = function_renderer.render(context, component)
-
-        print(EXPECTED)
-        print()
-        print(actual)
         self.assertEqual(EXPECTED, actual)
