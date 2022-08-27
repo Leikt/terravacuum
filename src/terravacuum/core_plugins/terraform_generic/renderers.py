@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression
-from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent
+from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression, get_renderer_class
+from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent
 
 
 def register_renderers() -> RendererRegistration:
@@ -9,15 +9,16 @@ def register_renderers() -> RendererRegistration:
     yield 'blank_lines', BlankLinesRenderer
     yield 'property', PropertyRenderer
     yield 'header', HeaderRenderer
+    yield 'section', SectionRenderer
 
 
 @dataclass
 class CodeRenderer:
-    _indent: int = 0
+    indentation: int = 0
 
     @property
     def indent(self) -> str:
-        return tab(self._indent)
+        return tab(self.indentation)
 
 
 class CommentRenderer(CodeRenderer):
@@ -54,3 +55,21 @@ class HeaderRenderer(CodeRenderer):
         sign = ' =' if component.is_property else ''
         end = ' {\n'
         return f"{self.indent}{keyword}{separator}{parameters}{sign}{end}"
+
+
+class SectionRenderer(CodeRenderer):
+    def render(self, context: Context, component: PComponent) -> str:
+        component: SectionComponent
+
+        header_renderer_c = get_renderer_class(component.header.get_renderer_name())
+        header = header_renderer_c(self.indentation).render(context, component.header)
+
+        children = []
+        for child_component in component.children:
+            child_renderer_c = get_renderer_class(child_component.get_renderer_name())
+            child = child_renderer_c(self.indentation + 1).render(context, child_component)
+            children.append(child)
+
+        end = self.indent + "}\n"
+
+        return header + ''.join(children) + end

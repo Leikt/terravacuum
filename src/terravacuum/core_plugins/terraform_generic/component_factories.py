@@ -1,12 +1,13 @@
 from typing import Union
 
-from terravacuum import ComponentFactoryRegistration, component_factory, Inline, ComponentFactoryReturn
+from terravacuum import ComponentFactoryRegistration, component_factory, Inline, ComponentFactoryReturn, \
+    get_component_factory
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
     # yield 'project', factory_project
     # yield 'module', factory_module
-    # yield 'section', factory_section
+    yield 'section', factory_section
     yield 'header', factory_header
     yield 'property', factory_property
     # yield 'loop', factory_loop
@@ -41,3 +42,10 @@ def factory_header(data: Union[dict, str]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'keyword': data}
     return 'header', data
+
+
+@component_factory(children=True)
+def factory_section(data: dict) -> ComponentFactoryReturn:
+    header_factory = get_component_factory('header')
+    data['header'] = header_factory(data['header'])
+    return 'section', data

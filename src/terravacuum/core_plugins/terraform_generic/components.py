@@ -6,7 +6,7 @@ from terravacuum import ComponentRegistration
 def register_components() -> ComponentRegistration:
     # yield 'project', InfraComponent
     # yield 'module', ModuleComponent
-    # yield 'section', SectionComponent
+    yield 'section', SectionComponent
     yield 'header', HeaderComponent
     yield 'property', PropertyComponent
     # yield 'loop', LoopComponent
@@ -30,7 +30,7 @@ class BlankLinesComponent:
     count: int = 1
 
     def get_renderer_name(self) -> str:
-        return "blank_line"
+        return "blank_lines"
 
 
 @dataclass
@@ -52,3 +52,13 @@ class HeaderComponent:
 
     def get_renderer_name(self) -> str:
         return "header"
+
+
+@dataclass
+class SectionComponent:
+    """Component that represent a section with a header and children."""
+    header: HeaderComponent
+    children: list[PropertyComponent]
+
+    def get_renderer_name(self) -> str:
+        return 'section'
