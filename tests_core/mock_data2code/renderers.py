@@ -38,8 +38,11 @@ class FunctionHeaderRenderer(CodeRenderer):
 class CodeLineRenderer(CodeRenderer):
     def render(self, context: Context, component: PComponent) -> str:
         component: CodeLineComponent
-        line = parse_expression(component.code, context)
-        return "{}{}".format(tab(self.indent), line)
+        lines = []
+        for code_line in component.code:
+            line = parse_expression(code_line, context)
+            lines.append("{}{}".format(tab(self.indent), line))
+        return '\n'.join(lines)
 
 
 class FunctionRenderer(CodeRenderer):

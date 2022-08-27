@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+from typing import Union
 
 from terravacuum import ComponentFactoryRegistration, ComponentRegistration, ComponentFactoryReturn, component_factory, \
-    get_component_factory
+    get_component_factory, Inline
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
@@ -16,22 +17,30 @@ def register_components() -> ComponentRegistration:
     yield 'function', FunctionComponent
 
 
-@component_factory(inline_arguments=True)
-def factory_function_header(data: dict) -> ComponentFactoryReturn:
+@component_factory(inline=[Inline.SINGLE])
+def factory_function_header(data: Union[str, dict]) -> ComponentFactoryReturn:
+    if isinstance(data, str):
+        data = {'name': data}
     return 'function_header', data
 
 
-@component_factory(inline_arguments=True)
-def factory_code_line(data: dict) -> ComponentFactoryReturn:
+@component_factory(inline=[Inline.SINGLE])
+def factory_code_line(data: Union[dict, str, list]) -> ComponentFactoryReturn:
+    if isinstance(data, str):
+        data = {'code': [data]}
+    if isinstance(data, list):
+        data = {'code': data}
     return 'code_line', data
 
 
-@component_factory(create_children=True, children_key='lines')
+@component_factory(children=True, children_key='lines')
 def factory_function(data: dict):
     header_factory = get_component_factory('function_header')
     header = header_factory(data['header'])
-    data = {'header': header, 'lines': data['lines']}
-    return 'function', data
+    line_factory = get_component_factory('code_line')
+    quick_lines = [line_factory(line) for line in data['quick_lines']]
+    final_lines = data['lines'] + quick_lines
+    return 'function', {'header': header, 'lines': final_lines}
 
 
 @dataclass
@@ -44,7 +53,7 @@ class FunctionHeaderComponent:
 
 @dataclass
 class CodeLineComponent:
-    code: str
+    code: list[str]
 
     def get_renderer_name(self) -> str:
         return 'code_line'

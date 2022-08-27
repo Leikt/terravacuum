@@ -3,7 +3,7 @@ import unittest
 from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
 from terravacuum import PluginLoader, get_component_factory, \
     WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, MissingChildrenDataError, \
-    TooManyChildComponents
+    TooManyChildComponents, WrongInlineArgument
 
 
 class TestComponentFactories(unittest.TestCase):
@@ -81,13 +81,21 @@ class TestComponentFactories(unittest.TestCase):
                 ]
             })
 
-    def test_inline_arguments(self):
+    def test_inline_dict(self):
         factory = get_component_factory('mock_with_inline_arguments')
         component = factory('name=MIETTAUX first_name=George')
         self.assertIsInstance(component, MockComponent)
         self.assertEqual('George', component.first_name)
         self.assertEqual('MIETTAUX', component.name)
 
-    def test_inline_argument_syntax(self):
+    def test_inline_single(self):
         factory = get_component_factory('mock_with_inline_arguments')
-        factory('name==é22 first_name=plrplgreplegp"')
+        component = factory('George MIETTAUX')
+        self.assertIsInstance(component, MockComponent)
+        self.assertEqual('George', component.first_name)
+        self.assertEqual('MIETTAUX', component.name)
+
+    def test_inline_error(self):
+        factory = get_component_factory('mock_with_inline_dict')
+        with self.assertRaises(WrongInlineArgument):
+            factory('George MIETTAUX')

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+from typing import Union
 
 from terravacuum import ComponentFactoryRegistration, ComponentRegistration, component_factory, ComponentFactoryReturn, \
-    PComponent, get_component_factory
+    PComponent, get_component_factory, Inline
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
@@ -9,6 +10,7 @@ def register_component_factories() -> ComponentFactoryRegistration:
     yield 'mocks', fabric_mock_parent_component
     yield 'mock_auto_children', fabric_mock_auto_children
     yield 'mock_with_inline_arguments', fabric_mock_with_inline
+    yield 'mock_with_inline_dict', fabric_mock_with_inline_dict
 
 
 def register_components() -> ComponentRegistration:
@@ -33,13 +35,21 @@ def fabric_mock_parent_component(data: dict) -> ComponentFactoryReturn:
     return 'mocker_parent', data
 
 
-@component_factory(create_children=True)
+@component_factory(children=True)
 def fabric_mock_auto_children(data: dict) -> ComponentFactoryReturn:
     return 'mock_with_children', data
 
 
-@component_factory(inline_arguments=True)
-def fabric_mock_with_inline(data: dict) -> ComponentFactoryReturn:
+@component_factory(inline=[Inline.DICT, Inline.SINGLE])
+def fabric_mock_with_inline(data: Union[dict, str]) -> ComponentFactoryReturn:
+    if isinstance(data, str):
+        first_name, last_name = data.split(' ')
+        data = {'name': last_name, 'first_name': first_name}
+    return 'mocker', data
+
+
+@component_factory(inline=[Inline.DICT])
+def fabric_mock_with_inline_dict(data: dict):
     return 'mocker', data
 
 

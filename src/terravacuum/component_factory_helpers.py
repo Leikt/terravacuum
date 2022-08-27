@@ -1,4 +1,5 @@
 import re
+from enum import Enum
 from typing import Any
 
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
@@ -31,21 +32,19 @@ class TooManyChildComponents(Exception):
         super().__init__(self.message)
 
 
-def component_factory(inline_arguments: bool = False, create_children: bool = False, children_key: str = 'children'):
-    """Decorator that create the concrete component from the returned data"""
+class WrongInlineArgument(Exception):
+    """Exception raised when the inline argument is not valid."""
 
-    def decorator(function):
-        def wrapper(data, *args, **kwargs) -> PComponent:
-            if inline_arguments:
-                data = _parse_string_arguments(data)
-            if create_children:
-                data = _create_children(data, children_key)
-            keyword, data = function(data, *args, **kwargs)
-            return _create_component(keyword, data)
+    def __init__(self, argument: str):
+        self.argument = argument
+        self.message = f"Wrong inline argument: '{argument}'"
+        super().__init__(self.message)
 
-        return wrapper
 
-    return decorator
+class Inline(Enum):
+    DICT = 'dict'
+    SINGLE = 'single'
+    LIST = 'list'
 
 
 def create_child(data: dict) -> PComponent:
@@ -71,11 +70,12 @@ def _create_component(keyword: str, data: dict) -> PComponent:
 INLINE_STRING_REGEX = r'(\w+)=(")?(.*?[^\\])(?(2)"|(?: |$))'
 
 
-def _parse_string_arguments(data: Any) -> Any:
+def _parse_string_dict(data: Any) -> Any:
     if not isinstance(data, str):
         return data
-    # TODO: check syntax
     matches = re.findall(INLINE_STRING_REGEX, data)
+    if len(matches) == 0:
+        return None
     data = {m[0]: m[2].replace(r'\"', '"') for m in matches}
     return data
 
@@ -90,3 +90,38 @@ def _create_children(data: dict, children_key: str) -> dict:
         children.append(create_child(child_data))
     data[children_key] = children
     return data
+
+
+def _process_inline(inline: list[Inline], data) -> Any:
+    if not isinstance(data, str):
+        return data
+
+    if Inline.DICT in inline:
+        parsed_dict = _parse_string_dict(data)
+        if parsed_dict is not None:
+            return parsed_dict
+
+    if Inline.LIST in inline:
+        pass
+
+    if Inline.SINGLE in inline:
+        return data
+
+    raise WrongInlineArgument(data)
+
+
+def component_factory(inline: list[Inline] = None, children: bool = False, children_key: str = 'children'):
+    """Decorator that create the concrete component from the returned data"""
+
+    def decorator(function):
+        def wrapper(data, *args, **kwargs) -> PComponent:
+            if inline:
+                data = _process_inline(inline, data)
+            if children:
+                data = _create_children(data, children_key)
+            keyword, data = function(data, *args, **kwargs)
+            return _create_component(keyword, data)
+
+        return wrapper
+
+    return decorator

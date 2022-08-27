@@ -5,11 +5,15 @@ from mock_data2code.renderers import FunctionRenderer
 from terravacuum import register_core_plugins, PluginLoader, get_renderer_factory, get_component_factory, Context
 
 TEMPLATE = {
-    'header': 'name=$.name',
+    'header': '$.name',
     'lines': [
-        {'code_line': r'code="say_hello(\"{{$.persons.A}}\")"'},
-        {'code_line': r'code="say_goodbye(\"{{$.persons.B}}\")"'},
-        {'code_line': 'code="x = {{ $.base_value }} + get_count()"'},
+        {'code_line': {'code': ['say_hello("{{$.persons.A}}")']}},
+        {'code_line': 'say_goodbye("{{$.persons.B}}")'},
+        {'code_line': ['x = {{ $.base_value }} + get_count()', 'new_var=yolooooooo']},
+    ],
+    'quick_lines': [
+        'hello = print("hello")',
+        'do_something()'
     ]
 }
 
@@ -26,6 +30,9 @@ EXPECTED = """function do_something() {
 \tsay_hello("George")
 \tsay_goodbye("Pierrette")
 \tx = 5 + get_count()
+\tnew_var=yolooooooo
+\thello = print("hello")
+\tdo_something()
 }"""
 
 
