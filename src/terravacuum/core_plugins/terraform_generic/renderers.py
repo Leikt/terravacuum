@@ -39,6 +39,6 @@ class BlankLinesRenderer(CodeRenderer):
 class PropertyRenderer(CodeRenderer):
     def render(self, context: Context, component: PComponent) -> str:
         component: PropertyComponent
-        name = parse_expression(component.name, context)
-        value = parse_expression(component.value, context)
+        name = parse_expression(component.name, context, quote_string_with_spaces=True)
+        value = parse_expression(component.value, context, quote_string_with_spaces=True)
         return "{}{} = {}\n".format(self.indent, name, value)

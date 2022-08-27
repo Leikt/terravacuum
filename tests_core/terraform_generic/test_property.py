@@ -25,15 +25,15 @@ class TestProperty(unittest.TestCase):
 
     def test_renderer(self):
         factory = get_component_factory('property')
-        component: PropertyComponent = factory('name=PropertyA value=ValueA')  # type: ignore
+        component: PropertyComponent = factory('name="Property A" value=ValueA')  # type: ignore
         renderer_c = get_renderer_class('property')
         renderer = renderer_c(0)
 
-        expected = f"{component.name} = {component.value}\n"
+        expected = f"\"{component.name}\" = {component.value}\n"
         actual = renderer.render(Context({}, {}), component)
         self.assertEqual(expected, actual)
 
         renderer_indent = renderer_c(1)
-        expected = f"\t{component.name} = {component.value}\n"
+        expected = f"\t\"{component.name}\" = {component.value}\n"
         actual = renderer_indent.render(Context({}, {}), component)
         self.assertEqual(expected, actual)
