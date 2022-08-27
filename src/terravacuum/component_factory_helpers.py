@@ -68,7 +68,7 @@ def _create_component(keyword: str, data: dict) -> PComponent:
         raise WrongArgumentForComponentConstructor(klass)
 
 
-INLINE_STRING_REGEX = r'([\w]+)=([^ "]+|".*?[^\\]")'
+INLINE_STRING_REGEX = r'(\w+)=(")?(.*?[^\\])(?(2)"|(?: |$))'
 
 
 def _parse_string_arguments(data: Any) -> Any:
@@ -76,7 +76,7 @@ def _parse_string_arguments(data: Any) -> Any:
         return data
     # TODO: check syntax
     matches = re.findall(INLINE_STRING_REGEX, data)
-    data = {m[0]: m[1] for m in matches}
+    data = {m[0]: m[2].replace(r'\"', '"') for m in matches}
     return data
 
 

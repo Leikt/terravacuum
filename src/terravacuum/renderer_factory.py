@@ -23,7 +23,7 @@ class WrongArgumentForRendererConstructor(Exception):
         super().__init__(self.message)
 
 
-RendererFactory = Callable[[Optional[Any, ...]], PRenderer]
+RendererFactory = Callable[[Optional[Any]], PRenderer]
 """Function that create a component from the template data."""
 
 RendererFactoryRegistration = tuple[str, RendererFactory]

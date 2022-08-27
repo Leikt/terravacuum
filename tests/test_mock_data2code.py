@@ -7,8 +7,8 @@ from terravacuum import register_core_plugins, PluginLoader, get_renderer_factor
 TEMPLATE = {
     'header': 'name=$.name',
     'lines': [
-        {'code_line': 'code="say_hello({{$.persons.A}})"'},
-        {'code_line': 'code="say_goodbye({{$.persons.B}})"'},
+        {'code_line': r'code="say_hello(\"{{$.persons.A}}\")"'},
+        {'code_line': r'code="say_goodbye(\"{{$.persons.B}}\")"'},
         {'code_line': 'code="x = {{ $.base_value }} + get_count()"'},
     ]
 }
@@ -23,11 +23,10 @@ DATA = {
 }
 
 EXPECTED = """function do_something() {
-    say_hello(George)
-    say_goodbye(Pierrette)
-    x = 5 + get_count()
-}
-"""
+\tsay_hello("George")
+\tsay_goodbye("Pierrette")
+\tx = 5 + get_count()
+}"""
 
 
 class TestMockData2Code(unittest.TestCase):
