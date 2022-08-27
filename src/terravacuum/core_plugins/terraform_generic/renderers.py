@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 
 from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression
-from .components import BlankLinesComponent, CommentComponent, PropertyComponent
+from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent
 
 
 def register_renderers() -> RendererRegistration:
     yield 'comment', CommentRenderer
     yield 'blank_lines', BlankLinesRenderer
     yield 'property', PropertyRenderer
+    yield 'header', HeaderRenderer
 
 
 @dataclass
@@ -33,7 +34,7 @@ class CommentRenderer(CodeRenderer):
 class BlankLinesRenderer(CodeRenderer):
     def render(self, _context: Context, component: PComponent) -> str:
         component: BlankLinesComponent
-        return '{}\n'.format(self.indent) * component.count
+        return f'{self.indent}\n' * component.count
 
 
 class PropertyRenderer(CodeRenderer):
@@ -41,4 +42,15 @@ class PropertyRenderer(CodeRenderer):
         component: PropertyComponent
         name = parse_expression(component.name, context, quote_string_with_spaces=True)
         value = parse_expression(component.value, context, quote_string_with_spaces=True)
-        return "{}{} = {}\n".format(self.indent, name, value)
+        return f"{self.indent}{name} = {value}\n"
+
+
+class HeaderRenderer(CodeRenderer):
+    def render(self, context: Context, component: PComponent) -> str:
+        component: HeaderComponent
+        keyword = parse_expression(component.keyword, context, quote_string_with_spaces=True)
+        parameters = " ".join([f'"{parse_expression(param, context)}"' for param in component.parameters])
+        separator = ' ' if len(parameters) > 0 else ''
+        sign = ' =' if component.is_property else ''
+        end = ' {\n'
+        return f"{self.indent}{keyword}{separator}{parameters}{sign}{end}"

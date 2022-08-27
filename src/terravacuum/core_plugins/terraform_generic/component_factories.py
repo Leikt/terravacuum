@@ -7,6 +7,7 @@ def register_component_factories() -> ComponentFactoryRegistration:
     # yield 'project', factory_project
     # yield 'module', factory_module
     # yield 'section', factory_section
+    yield 'header', factory_header
     yield 'property', factory_property
     # yield 'loop', factory_loop
     # yield 'include', factory_include
@@ -33,3 +34,10 @@ def factory_blank_lines(data: Union[dict, str]) -> ComponentFactoryReturn:
 @component_factory(inline=[Inline.DICT])
 def factory_property(data: dict) -> ComponentFactoryReturn:
     return 'property', data
+
+
+@component_factory(inline=[Inline.SINGLE])
+def factory_header(data: Union[dict, str]) -> ComponentFactoryReturn:
+    if isinstance(data, str):
+        data = {'keyword': data}
+    return 'header', data

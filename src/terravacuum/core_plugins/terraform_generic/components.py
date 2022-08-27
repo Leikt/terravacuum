@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from terravacuum import ComponentRegistration
 
@@ -7,7 +7,7 @@ def register_components() -> ComponentRegistration:
     # yield 'project', InfraComponent
     # yield 'module', ModuleComponent
     # yield 'section', SectionComponent
-    # yield 'header', HeaderComponent
+    yield 'header', HeaderComponent
     yield 'property', PropertyComponent
     # yield 'loop', LoopComponent
     # yield 'include', IncludeComponent
@@ -41,3 +41,14 @@ class PropertyComponent:
 
     def get_renderer_name(self) -> str:
         return "property"
+
+
+@dataclass
+class HeaderComponent:
+    """Component that represent the header of a section"""
+    keyword: str
+    parameters: list[str] = field(default_factory=list)
+    is_property: bool = False
+
+    def get_renderer_name(self) -> str:
+        return "header"
