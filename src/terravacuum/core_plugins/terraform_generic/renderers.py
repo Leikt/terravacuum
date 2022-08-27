@@ -12,7 +12,11 @@ def register_renderers() -> RendererRegistration:
 
 @dataclass
 class CodeRenderer:
-    indent: int = 0
+    _indent: int = 0
+
+    @property
+    def indent(self) -> str:
+        return tab(self._indent)
 
 
 class CommentRenderer(CodeRenderer):
@@ -21,7 +25,7 @@ class CommentRenderer(CodeRenderer):
         lines = []
         for comment_template in component.comments:
             comment = parse_expression(comment_template, context)
-            line = '{}# {}'.format(tab(self.indent), comment)
+            line = '{}# {}'.format(self.indent, comment)
             lines.append(line)
         return '\n'.join(lines) + '\n'
 
@@ -29,7 +33,7 @@ class CommentRenderer(CodeRenderer):
 class BlankLinesRenderer(CodeRenderer):
     def render(self, _context: Context, component: PComponent) -> str:
         component: BlankLinesComponent
-        return '\n' * component.count
+        return '{}\n'.format(self.indent) * component.count
 
 
 class PropertyRenderer(CodeRenderer):
@@ -37,4 +41,4 @@ class PropertyRenderer(CodeRenderer):
         component: PropertyComponent
         name = parse_expression(component.name, context)
         value = parse_expression(component.value, context)
-        return "{}{} = {}".format(tab(self.indent), name, value)
+        return "{}{} = {}\n".format(self.indent, name, value)

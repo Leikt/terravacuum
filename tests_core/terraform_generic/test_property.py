@@ -29,11 +29,11 @@ class TestProperty(unittest.TestCase):
         renderer_c = get_renderer_class('property')
         renderer = renderer_c(0)
 
-        expected = f"{component.name} = {component.value}"
+        expected = f"{component.name} = {component.value}\n"
         actual = renderer.render(Context({}, {}), component)
         self.assertEqual(expected, actual)
 
         renderer_indent = renderer_c(1)
-        expected = f"\t{component.name} = {component.value}"
+        expected = f"\t{component.name} = {component.value}\n"
         actual = renderer_indent.render(Context({}, {}), component)
         self.assertEqual(expected, actual)
