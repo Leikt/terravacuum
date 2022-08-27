@@ -18,8 +18,8 @@ class WrongDataTypeError(Exception):
 class MissingChildrenDataError(Exception):
     """Exception raised when the factory generate children but there is no "children" key inside the template data."""
 
-    def __init__(self):
-        super().__init__('"children" key is missing from the template data.')
+    def __init__(self, children_key: str):
+        super().__init__(f'"{children_key}" key is missing from the template data.')
 
 
 class TooManyChildComponents(Exception):
@@ -84,7 +84,7 @@ def _create_children(data: dict, children_key: str) -> dict:
     if not isinstance(data, dict):
         raise WrongDataTypeError(dict, type(data))
     if children_key not in data:
-        raise MissingChildrenDataError()
+        raise MissingChildrenDataError(children_key)
     children: list[PComponent] = []
     for child_data in data[children_key]:
         children.append(create_child(child_data))

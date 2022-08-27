@@ -1,8 +1,9 @@
 from mock_factories import MockComponent, MockParentComponent
 from terravacuum import Context, PComponent, parse_expression, get_renderer_class
+from terravacuum import RendererRegistration
 
 
-def register_renderers() -> tuple[str, type]:
+def register_renderers() -> RendererRegistration:
     yield 'mock_simple', MockRendererNoExpression
     yield 'mock', MockRendererWithExpression
     yield 'mock_parent', MockParentRenderer

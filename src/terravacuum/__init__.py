@@ -16,4 +16,6 @@ from .component_factory_helpers import component_factory, WrongDataTypeError, Mi
     TooManyChildComponents, create_child
 
 # Import renderers
-from .renderer import PRenderer, RendererNotFound, get_renderer_class
+from .renderer import PRenderer, RendererNotFound, get_renderer_class, RendererRegistration
+from .renderer_factory import get_renderer_factory, RendererFactoryNotFound, RendererFactory, \
+    RendererFactoryRegistration, RendererFactoryReturn, WrongArgumentForRendererConstructor

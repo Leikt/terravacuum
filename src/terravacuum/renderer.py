@@ -15,6 +15,10 @@ class RendererNotFound(Exception):
         super().__init__(self.message)
 
 
+RendererRegistration = tuple[str, type]
+"""Return type for the register_renderers plugin functions."""
+
+
 class PRenderer(Protocol):
     """A component of the template, it is able to process data to a renderer"""
 
