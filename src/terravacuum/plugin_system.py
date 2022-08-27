@@ -51,6 +51,21 @@ class PluginLoader:
 
 
 def register_plugin_socket(cls):
-    """Register the class as a plugin socket."""
+    """[Decorator] Register the class as a plugin socket."""
     PluginLoader.register_plugin_socket(cls)
     return cls
+
+
+def plugin_registerer(method: str):
+    """[Decorator] Check if the module has the wanted attributes."""
+
+    def inner(func):
+        def wrapper(cls, module: object):
+            if not hasattr(module, method):
+                return
+            for value in module.__getattribute__(method)():
+                func(cls, value)
+
+        return wrapper
+
+    return inner

@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Callable, Union
 
-from .plugin_system import register_plugin_socket
+from .plugin_system import register_plugin_socket, plugin_registerer
 from .component import PComponent
 
 
@@ -32,6 +32,7 @@ ComponentFactoryRegistration = tuple[str, ComponentFactory]
 ComponentFactoryReturn = tuple[str, dict]
 """Return type when the function uses the component_factory decorator"""
 
+
 @register_plugin_socket
 class ComponentFactoryPluginSocket:
     """Plugin socket for the component factories."""
@@ -39,15 +40,14 @@ class ComponentFactoryPluginSocket:
     __factories: dict[str, ComponentFactory] = {}
 
     @classmethod
-    def register(cls, module):
-        if not hasattr(module, 'register_component_factories'):
+    @plugin_registerer('register_component_factories')
+    def register(cls, element):
+        keyword, factory = element
+        if keyword in cls.__factories:
+            logging.warning('A component factory is already registered on keyword "{}"'.format(keyword))
             return
-        for keyword, factory in module.register_component_factories():
-            if keyword in cls.__factories:
-                logging.warning('A component factory is already registered on keyword "{}"'.format(keyword))
-                continue
 
-            cls.__factories[keyword] = factory
+        cls.__factories[keyword] = factory
 
     @classmethod
     def get_factory(cls, keyword: str) -> ComponentFactory:
@@ -60,4 +60,3 @@ def get_component_factory(keyword: str) -> ComponentFactory:
     """Retrieve the component factory associated with the given keyword. Raise a ComponentFactoryNotFound error if
     it's missing."""
     return ComponentFactoryPluginSocket.get_factory(keyword)
-

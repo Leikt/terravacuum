@@ -1,5 +1,5 @@
 # Import standalone modules
-from .plugin_system import PluginLoader, PPluginSocket, register_plugin_socket
+from .plugin_system import PluginLoader, PPluginSocket, register_plugin_socket, plugin_registerer
 from .context import Context, create_context
 
 # Import modules with plugin sockets

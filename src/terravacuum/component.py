@@ -1,7 +1,7 @@
 import logging
 from typing import Protocol
 
-from .plugin_system import register_plugin_socket
+from .plugin_system import register_plugin_socket, plugin_registerer
 
 
 class ComponentNotFound(Exception):
@@ -22,6 +22,7 @@ class PComponent(Protocol):
 
 ComponentRegistration = tuple[str, type]
 
+
 @register_plugin_socket
 class ComponentPluginSocket:
     """Plugin socket for the components."""
@@ -29,15 +30,14 @@ class ComponentPluginSocket:
     __components: dict[str, type] = {}
 
     @classmethod
-    def register(cls, module):
-        if not hasattr(module, 'register_components'):
+    @plugin_registerer('register_components')
+    def register(cls, element):
+        keyword, factory = element
+        if keyword in cls.__components:
+            logging.warning('A component factory is already registered on keyword "{}"'.format(keyword))
             return
-        for keyword, factory in module.register_components():
-            if keyword in cls.__components:
-                logging.warning('A component factory is already registered on keyword "{}"'.format(keyword))
-                continue
 
-            cls.__components[keyword] = factory
+        cls.__components[keyword] = factory
 
     @classmethod
     def get_component_class(cls, keyword: str) -> type:

@@ -1,7 +1,7 @@
 import logging
 from typing import Protocol, Optional, Any
 
-from .plugin_system import register_plugin_socket
+from .plugin_system import register_plugin_socket, plugin_registerer
 
 
 class PFileLoader(Protocol):
@@ -23,14 +23,12 @@ class FileLoaderPluginSocket:
     __plugins: list[PFileLoader] = []
 
     @classmethod
-    def register(cls, module):
-        if not hasattr(module, 'register_file_loaders'):
+    @plugin_registerer('register_file_loaders')
+    def register(cls, plugin):
+        if plugin in cls.__plugins:
             return
-        for plugin in module.register_file_loaders():
-            if plugin in cls.__plugins:
-                continue
 
-            cls.__plugins.append(plugin)
+        cls.__plugins.append(plugin)
 
     @classmethod
     def get_plugins(cls) -> list[PFileLoader]:

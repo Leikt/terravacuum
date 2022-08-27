@@ -2,7 +2,7 @@ import logging
 from enum import Enum
 from typing import Protocol, Any, Optional
 
-from .plugin_system import register_plugin_socket
+from .plugin_system import register_plugin_socket, plugin_registerer
 from .context import Context
 
 
@@ -27,14 +27,12 @@ class ExpressionParserPluginSocket:
     __plugins: list[PExpressionParser] = []
 
     @classmethod
-    def register(cls, module):
-        if not hasattr(module, 'register_expression_parsers'):
+    @plugin_registerer('register_expression_parsers')
+    def register(cls, plugin):
+        if plugin in cls.__plugins:
             return
-        for plugin in module.register_expression_parsers():
-            if plugin in cls.__plugins:
-                continue
 
-            cls.__plugins.append(plugin)
+        cls.__plugins.append(plugin)
 
     @classmethod
     def get_plugins(cls) -> list[PExpressionParser]:
