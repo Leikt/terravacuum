@@ -8,7 +8,7 @@ def register_components() -> ComponentRegistration:
     # yield 'module', ModuleComponent
     # yield 'section', SectionComponent
     # yield 'header', HeaderComponent
-    # yield 'property', PropertyComponent
+    yield 'property', PropertyComponent
     # yield 'loop', LoopComponent
     # yield 'include', IncludeComponent
     yield 'comment', CommentComponent
@@ -31,3 +31,13 @@ class BlankLinesComponent:
 
     def get_renderer_name(self) -> str:
         return "blank_line"
+
+
+@dataclass
+class PropertyComponent:
+    """Component that represent a property"""
+    name: str
+    value: str
+
+    def get_renderer_name(self) -> str:
+        return "property"

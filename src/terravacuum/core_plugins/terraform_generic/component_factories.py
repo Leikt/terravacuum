@@ -7,7 +7,7 @@ def register_component_factories() -> ComponentFactoryRegistration:
     # yield 'project', factory_project
     # yield 'module', factory_module
     # yield 'section', factory_section
-    # yield 'property', factory_property
+    yield 'property', factory_property
     # yield 'loop', factory_loop
     # yield 'include', factory_include
     yield 'comment', factory_comment
@@ -28,3 +28,8 @@ def factory_blank_lines(data: Union[dict, str]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'count': int(data)}
     return 'blank_lines', data
+
+
+@component_factory(inline=[Inline.DICT])
+def factory_property(data: dict) -> ComponentFactoryReturn:
+    return 'property', data

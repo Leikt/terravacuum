@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 
 from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression
-from .components import BlankLinesComponent, CommentComponent
+from .components import BlankLinesComponent, CommentComponent, PropertyComponent
 
 
 def register_renderers() -> RendererRegistration:
     yield 'comment', CommentRenderer
     yield 'blank_lines', BlankLinesRenderer
+    yield 'property', PropertyRenderer
 
 
 @dataclass
@@ -29,3 +30,11 @@ class BlankLinesRenderer(CodeRenderer):
     def render(self, _context: Context, component: PComponent) -> str:
         component: BlankLinesComponent
         return '\n' * component.count
+
+
+class PropertyRenderer(CodeRenderer):
+    def render(self, context: Context, component: PComponent) -> str:
+        component: PropertyComponent
+        name = parse_expression(component.name, context)
+        value = parse_expression(component.value, context)
+        return "{}{} = {}".format(tab(self.indent), name, value)
