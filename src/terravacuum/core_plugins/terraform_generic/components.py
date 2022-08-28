@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
+from typing import Union
 
-from terravacuum import ComponentRegistration
+from terravacuum import ComponentRegistration, PComponent
 
 
 def register_components() -> ComponentRegistration:
@@ -9,7 +10,7 @@ def register_components() -> ComponentRegistration:
     yield 'section', SectionComponent
     yield 'header', HeaderComponent
     yield 'property', PropertyComponent
-    # yield 'loop', LoopComponent
+    yield 'loop', LoopComponent
     # yield 'include', IncludeComponent
     yield 'comment', CommentComponent
     yield 'blank_lines', BlankLinesComponent
@@ -62,3 +63,13 @@ class SectionComponent:
 
     def get_renderer_name(self) -> str:
         return 'section'
+
+
+@dataclass
+class LoopComponent:
+    """Component that represent a loop iteration."""
+    through: Union[str, list]
+    children: list[PComponent]
+
+    def get_renderer_name(self) -> str:
+        return 'loop'

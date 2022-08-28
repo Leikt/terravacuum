@@ -1,7 +1,10 @@
 from dataclasses import dataclass
+from typing import Any
 
-from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression, get_renderer_class
-from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent
+from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression, get_renderer_class, \
+    create_context
+from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent, \
+    LoopComponent
 
 
 def register_renderers() -> RendererRegistration:
@@ -10,6 +13,16 @@ def register_renderers() -> RendererRegistration:
     yield 'property', PropertyRenderer
     yield 'header', HeaderRenderer
     yield 'section', SectionRenderer
+    yield 'loop', LoopRenderer
+
+
+class DataTypeError(Exception):
+    def __init__(self, expected_type, data, original_data):
+        self.expected_type = expected_type
+        self.data = data
+        self.original_data = original_data
+        self.message = f"Wrong data type for the expression {original_data}. Expect {expected_type}. Got {type(data)}"
+        super().__init__(self.message)
 
 
 @dataclass
@@ -73,3 +86,26 @@ class SectionRenderer(CodeRenderer):
         end = self.indent + "}\n"
 
         return header + ''.join(children) + end
+
+
+class LoopRenderer(CodeRenderer):
+    @staticmethod
+    def initialize_data_loop(context: Context, original_data: Any) -> list:
+        data = original_data
+        if isinstance(data, str):
+            data = parse_expression(data, context)
+        if not isinstance(data, list):
+            raise DataTypeError('list', data, original_data)
+        return data
+
+    def render(self, context: Context, component: PComponent) -> str:
+        component: LoopComponent
+        data = self.initialize_data_loop(context, component.through)
+        content = []
+        for d in data:
+            child_context = create_context(d, context.variables)
+            for child in component.children:
+                renderer_c = get_renderer_class(child.get_renderer_name())
+                renderer = renderer_c(self.indentation)
+                content.append(renderer.render(child_context, child))
+        return ''.join(content)
