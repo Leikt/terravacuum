@@ -17,6 +17,8 @@ def register_renderers() -> RendererRegistration:
 
 
 class DataTypeError(Exception):
+    """Exception raised when the data type does not match the requirements."""
+
     def __init__(self, expected_type, data, original_data):
         self.expected_type = expected_type
         self.data = data
@@ -27,6 +29,7 @@ class DataTypeError(Exception):
 
 @dataclass
 class CodeRenderer:
+    """Base class of the generic renderers. Provide some helpers."""
     indentation: int = 0
 
     @property
@@ -35,6 +38,8 @@ class CodeRenderer:
 
 
 class CommentRenderer(CodeRenderer):
+    """Render comment lines."""
+
     def render(self, context: Context, component: PComponent) -> str:
         component: CommentComponent
         lines = []
@@ -46,12 +51,16 @@ class CommentRenderer(CodeRenderer):
 
 
 class BlankLinesRenderer(CodeRenderer):
+    """Render blank lines."""
+
     def render(self, _context: Context, component: PComponent) -> str:
         component: BlankLinesComponent
         return f'{self.indent}\n' * component.count
 
 
 class PropertyRenderer(CodeRenderer):
+    """Render a terraform property."""
+
     def render(self, context: Context, component: PComponent) -> str:
         component: PropertyComponent
         name = parse_expression(component.name, context, quote_string_with_spaces=True)
@@ -60,6 +69,8 @@ class PropertyRenderer(CodeRenderer):
 
 
 class HeaderRenderer(CodeRenderer):
+    """Render a section header."""
+
     def render(self, context: Context, component: PComponent) -> str:
         component: HeaderComponent
         keyword = parse_expression(component.keyword, context, quote_string_with_spaces=True)
@@ -71,6 +82,8 @@ class HeaderRenderer(CodeRenderer):
 
 
 class SectionRenderer(CodeRenderer):
+    """Render a complete section."""
+
     def render(self, context: Context, component: PComponent) -> str:
         component: SectionComponent
 
@@ -89,6 +102,8 @@ class SectionRenderer(CodeRenderer):
 
 
 class LoopRenderer(CodeRenderer):
+    """Loop through the given data and render all the children for each data."""
+
     @staticmethod
     def initialize_data_loop(context: Context, original_data: Any) -> list:
         data = original_data
