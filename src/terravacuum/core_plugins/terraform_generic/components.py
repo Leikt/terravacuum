@@ -7,11 +7,12 @@ from terravacuum import ComponentRegistration, PComponent
 def register_components() -> ComponentRegistration:
     # yield 'project', InfraComponent
     # yield 'module', ModuleComponent
+    # yield 'file', FileComponent
     yield 'section', SectionComponent
     yield 'header', HeaderComponent
     yield 'property', PropertyComponent
     yield 'loop', LoopComponent
-    # yield 'include', IncludeComponent
+    yield 'container', ContainerComponent
     yield 'comment', CommentComponent
     yield 'blank_lines', BlankLinesComponent
 
@@ -73,3 +74,12 @@ class LoopComponent:
 
     def get_renderer_name(self) -> str:
         return 'loop'
+
+
+@dataclass
+class ContainerComponent:
+    """Component that represent a component that only contains other components."""
+    children: str
+
+    def get_renderer_name(self) -> str:
+        return 'container'

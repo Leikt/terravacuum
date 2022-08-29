@@ -2,8 +2,8 @@ import unittest
 
 from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
 from terravacuum import PluginLoader, get_component_factory, \
-    WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, MissingChildrenDataError, \
-    TooManyChildComponents, WrongInlineArgument
+    WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, TooManyChildComponents, \
+    WrongInlineArgument
 
 
 class TestComponentFactories(unittest.TestCase):
@@ -21,7 +21,6 @@ class TestComponentFactories(unittest.TestCase):
     def test_mock_raises(self):
         factory = get_component_factory('mock')
         with self.assertRaises(WrongArgumentForComponentConstructor):
-            factory(None)
             factory([])
             factory("")
 
@@ -72,8 +71,6 @@ class TestComponentFactories(unittest.TestCase):
         with self.assertRaises(WrongDataTypeError):
             factory(None)
             factory({'children': 'wrong_type'})
-        with self.assertRaises(MissingChildrenDataError):
-            factory({})
         with self.assertRaises(TooManyChildComponents):
             factory({
                 'children': [

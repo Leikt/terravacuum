@@ -2,17 +2,17 @@ import re
 from enum import Enum
 from typing import Any
 
-from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
 from .component import PComponent, ComponentPluginSocket
+from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
 
 
 class WrongDataTypeError(Exception):
     """Exception raised when the data hase the wrong type."""
 
-    def __init__(self, expected: type, actual: type):
+    def __init__(self, expected: str, actual: type):
         self.expected_type = expected
         self.actual_type = actual
-        self.message = f"Wrong data type.\nExpected type: {expected.__name__}\nActual: {actual.__name__}"
+        self.message = f"Wrong data type.\nExpected type: {expected}\nActual: {actual.__name__}"
         super().__init__(self.message)
 
 
@@ -47,10 +47,10 @@ class Inline(Enum):
     LIST = 'list'
 
 
-def create_child(data: dict) -> PComponent:
+def create_component(data: dict) -> PComponent:
     """Helper function to create a child component."""
     if not isinstance(data, dict):
-        raise WrongDataTypeError(dict, type(data))
+        raise WrongDataTypeError("dict", type(data))
     if len(data) != 1:
         raise TooManyChildComponents(list(data.keys()))
     keyword = list(data.keys())[0]
@@ -80,16 +80,13 @@ def _parse_string_dict(data: Any) -> Any:
     return data
 
 
-def _create_children(data: dict, children_key: str) -> dict:
-    if not isinstance(data, dict):
-        raise WrongDataTypeError(dict, type(data))
-    if children_key not in data:
-        raise MissingChildrenDataError(children_key)
+def create_children(data: list[dict]) -> list[PComponent]:
+    if not isinstance(data, list):
+        raise WrongDataTypeError("list", type(data))
     children: list[PComponent] = []
-    for child_data in data[children_key]:
-        children.append(create_child(child_data))
-    data[children_key] = children
-    return data
+    for child_data in data:
+        children.append(create_component(child_data))
+    return children
 
 
 def _process_inline(inline: list[Inline], data) -> Any:
@@ -110,15 +107,25 @@ def _process_inline(inline: list[Inline], data) -> Any:
     raise WrongInlineArgument(data)
 
 
+def _check_data_type(data, accepted: list[type] = None):
+    if accepted is None:
+        accepted = [dict, list, str]
+    for typ in accepted:
+        if isinstance(data, typ):
+            return
+    raise WrongDataTypeError("[dict, list, str]", type(data))
+
+
 def component_factory(inline: list[Inline] = None, children: bool = False, children_key: str = 'children'):
     """Decorator that create the concrete component from the returned data"""
 
     def decorator(function):
         def wrapper(data, *args, **kwargs) -> PComponent:
+            _check_data_type(data)
             if inline:
                 data = _process_inline(inline, data)
-            if children:
-                data = _create_children(data, children_key)
+            if children and children_key in data:
+                data[children_key] = create_children(data[children_key])
             keyword, data = function(data, *args, **kwargs)
             return _create_component(keyword, data)
 
