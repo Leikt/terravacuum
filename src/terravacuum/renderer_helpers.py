@@ -12,3 +12,5 @@ def render_components(context: Context, components: list[PComponent], *args, **k
         renderer = renderer_c(*args, **kwargs)
         content.append(renderer.render(context, component))
     return ''.join(content)
+
+

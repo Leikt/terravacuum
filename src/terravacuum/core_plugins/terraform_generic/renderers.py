@@ -88,19 +88,15 @@ class SectionRenderer(CodeRenderer):
 
     def render(self, context: Context, component: PComponent) -> str:
         component: SectionComponent
-
         header_renderer_c = get_renderer_class(component.header.get_renderer_name())
-        header = header_renderer_c(self.indentation).render(context, component.header)
+        header = header_renderer_c(self.indentation)
 
-        children = []
-        for child_component in component.children:
-            child_renderer_c = get_renderer_class(child_component.get_renderer_name())
-            child = child_renderer_c(self.indentation + 1).render(context, child_component)
-            children.append(child)
-
-        end = self.indent + "}\n"
-
-        return header + ''.join(children) + end
+        content = [
+            header.render(context, component.header),
+            render_components(context, component.children, self.indentation + 1),
+            self.indent + "}\n"
+        ]
+        return ''.join(content)
 
 
 class LoopRenderer(CodeRenderer):
@@ -121,10 +117,7 @@ class LoopRenderer(CodeRenderer):
         content = []
         for d in data:
             child_context = create_context(d, context.variables)
-            for child in component.children:
-                renderer_c = get_renderer_class(child.get_renderer_name())
-                renderer = renderer_c(self.indentation)
-                content.append(renderer.render(child_context, child))
+            content.append(render_components(child_context, component.children, self.indentation))
         return ''.join(content)
 
 
@@ -133,12 +126,7 @@ class ContainerRenderer(CodeRenderer):
 
     def render(self, context: Context, component: PComponent) -> str:
         component: ContainerComponent
-        content = []
-        for child in component.children:
-            renderer_c = get_renderer_class(child.get_renderer_name())
-            renderer = renderer_c(self.indentation)
-            content.append(renderer.render(context, child))
-        return ''.join(content)
+        return render_components(context, component.children, self.indentation)
 
 
 class FileRenderer(CodeRenderer):
