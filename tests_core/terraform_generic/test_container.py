@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, create_context, get_renderer_class
+from terravacuum import register_core_plugins, get_component_factory, create_rendering_context, get_renderer_class
 from terravacuum.core_plugins.terraform_generic.components import ContainerComponent
 
 
@@ -28,7 +28,7 @@ class TestContainer(unittest.TestCase):
     def test_renderer(self):
         factory = get_component_factory('include')
         component = factory('data_tests/test_include.yml')
-        context = create_context({}, {})
+        context = create_rendering_context()
         renderer_c = get_renderer_class('container')
         renderer = renderer_c(0)
 

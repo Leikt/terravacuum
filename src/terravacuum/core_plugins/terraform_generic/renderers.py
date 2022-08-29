@@ -2,8 +2,8 @@ import os.path
 from dataclasses import dataclass
 from typing import Any
 
-from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression, get_renderer_class, \
-    create_context, save_to_file, render_components
+from terravacuum import RendererRegistration, PComponent, RenderingContext, tab, parse_expression, get_renderer_class, \
+    create_rendering_context, save_to_file, render_components
 from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent, \
     LoopComponent, ContainerComponent, FileComponent, ProjectComponent
 
@@ -44,7 +44,7 @@ class CodeRenderer:
 class CommentRenderer(CodeRenderer):
     """Render comment lines."""
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: CommentComponent
         lines = []
         for comment_template in component.comments:
@@ -57,7 +57,7 @@ class CommentRenderer(CodeRenderer):
 class BlankLinesRenderer(CodeRenderer):
     """Render blank lines."""
 
-    def render(self, _context: Context, component: PComponent) -> str:
+    def render(self, _context: RenderingContext, component: PComponent) -> str:
         component: BlankLinesComponent
         return f'{self.indent}\n' * component.count
 
@@ -65,7 +65,7 @@ class BlankLinesRenderer(CodeRenderer):
 class PropertyRenderer(CodeRenderer):
     """Render a terraform property."""
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: PropertyComponent
         name = parse_expression(component.name, context, quote_string_with_spaces=True)
         value = parse_expression(component.value, context, quote_string_with_spaces=True)
@@ -75,7 +75,7 @@ class PropertyRenderer(CodeRenderer):
 class HeaderRenderer(CodeRenderer):
     """Render a section header."""
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: HeaderComponent
         keyword = parse_expression(component.keyword, context, quote_string_with_spaces=True)
         parameters = " ".join([f'"{parse_expression(param, context)}"' for param in component.parameters])
@@ -88,7 +88,7 @@ class HeaderRenderer(CodeRenderer):
 class SectionRenderer(CodeRenderer):
     """Render a complete section."""
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: SectionComponent
         header_renderer_c = get_renderer_class(component.header.get_renderer_name())
         header = header_renderer_c(self.indentation)
@@ -105,7 +105,7 @@ class LoopRenderer(CodeRenderer):
     """Loop through the given data and render all the children for each data."""
 
     @staticmethod
-    def initialize_data_loop(context: Context, original_data: Any) -> list:
+    def initialize_data_loop(context: RenderingContext, original_data: Any) -> list:
         data = original_data
         if isinstance(data, str):
             data = parse_expression(data, context)
@@ -113,12 +113,12 @@ class LoopRenderer(CodeRenderer):
             raise DataTypeError('list', data, original_data)
         return data
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: LoopComponent
         data = self.initialize_data_loop(context, component.through)
         content = []
         for d in data:
-            child_context = create_context(parent=context, data=d)
+            child_context = create_rendering_context(parent=context, data=d)
             content.append(render_components(child_context, component.children, self.indentation))
         return ''.join(content)
 
@@ -126,7 +126,7 @@ class LoopRenderer(CodeRenderer):
 class ContainerRenderer(CodeRenderer):
     """Render the children of the component"""
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: ContainerComponent
         return render_components(context, component.children, self.indentation)
 
@@ -134,10 +134,10 @@ class ContainerRenderer(CodeRenderer):
 class FileRenderer(CodeRenderer):
     """Render the children and store it to a file."""
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: FileComponent
         wd = os.path.join(context.working_directory, component.destination)
-        children_context = create_context(working_directory=wd, parent=context)
+        children_context = create_rendering_context(working_directory=wd, parent=context)
         result = render_components(children_context, component.children, self.indentation)
         destination = parse_expression(component.destination, context)
         save_to_file(destination, result)
@@ -147,9 +147,9 @@ class FileRenderer(CodeRenderer):
 class ProjectRenderer(CodeRenderer):
     """Render the children inside the directory."""
 
-    def render(self, context: Context, component: PComponent) -> str:
+    def render(self, context: RenderingContext, component: PComponent) -> str:
         component: ProjectComponent
         wd = os.path.join(context.working_directory, component.directory)
-        children_context = create_context(working_directory=wd, parent=context)
+        children_context = create_rendering_context(working_directory=wd, parent=context)
         render_components(children_context, component.children, 0)
         return ''

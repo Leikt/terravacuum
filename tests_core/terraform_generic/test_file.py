@@ -1,7 +1,8 @@
 import os
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context, load_file
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, \
+    load_file
 from terravacuum.core_plugins.terraform_generic.components import FileComponent
 
 
@@ -25,7 +26,7 @@ class TestFile(unittest.TestCase):
         self.assertIsInstance(component, FileComponent)
         renderer_c = get_renderer_class(component.get_renderer_name())
         renderer = renderer_c(0)
-        context = create_context()
+        context = create_rendering_context()
 
         actual = renderer.render(context, component)  # type: ignore
         expected = ''

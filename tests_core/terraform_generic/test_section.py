@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context
 from terravacuum.core_plugins.terraform_generic.components import SectionComponent, HeaderComponent
 
 
@@ -35,7 +35,7 @@ class TestSection(unittest.TestCase):
 \tPB = VB
 }
 """
-        actual = renderer.render(create_context({}, {}), component)
+        actual = renderer.render(create_rendering_context(), component)
         self.assertEqual(expected, actual)
 
     def test_renderer_indent(self):
@@ -56,5 +56,5 @@ class TestSection(unittest.TestCase):
 \t\tPB = VB
 \t}
 """
-        actual = renderer.render(create_context({}, {}), component)
+        actual = renderer.render(create_rendering_context(), component)
         self.assertEqual(expected, actual)

@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context
 from terravacuum.core_plugins.terraform_generic.components import HeaderComponent
 
 
@@ -28,7 +28,7 @@ class TestHeader(unittest.TestCase):
     def test_renderer(self):
         factory = get_component_factory('header')
         renderer_c = get_renderer_class('header')
-        context = create_context({}, {})
+        context = create_rendering_context()
 
         component = factory('instance')
         renderer = renderer_c(0)

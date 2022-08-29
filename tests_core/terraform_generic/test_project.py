@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context, load_file
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, load_file
 from terravacuum.core_plugins.terraform_generic.components import ProjectComponent
 
 
@@ -22,7 +22,7 @@ class TestProject(unittest.TestCase):
         component = factory({'directory': 'data_tests/project_test/', 'children': [
             {'file': {'destination': 'test.tf', 'children': [{'property': 'name=Name value=TEST'}]}}]})
         self.assertIsInstance(component, ProjectComponent)
-        context = create_context({}, {})
+        context = create_rendering_context({}, {})
 
         renderer_c = get_renderer_class(component.get_renderer_name())
         renderer = renderer_c()

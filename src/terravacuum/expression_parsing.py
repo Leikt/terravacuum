@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Protocol, Any, Optional
 
 from .plugin_system import register_plugin_socket, plugin_registerer
-from .context import Context
+from .rendering_context import RenderingContext
 
 
 class ExpressionParsingResult(Enum):
@@ -16,7 +16,7 @@ class PExpressionParser(Protocol):
     """Object able to parse a string expression in the given context."""
 
     @staticmethod
-    def parse(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
+    def parse(expr: str, context: RenderingContext) -> tuple[ExpressionParsingResult, Optional[Any]]:
         """Parse the expression and return the data."""
 
 
@@ -39,7 +39,7 @@ class ExpressionParserPluginSocket:
         return cls.__plugins
 
 
-def parse_expression(expr: str, context: Context, quote_string_with_spaces: bool = False) -> Optional[Any]:
+def parse_expression(expr: str, context: RenderingContext, quote_string_with_spaces: bool = False) -> Optional[Any]:
     """Parse the given expression in the context.
     If no parser is able to parse the expression, it is return unchanged."""
     result = expr

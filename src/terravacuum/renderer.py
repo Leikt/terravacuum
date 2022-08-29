@@ -2,7 +2,7 @@ import logging
 from typing import Protocol, Callable, Any
 
 from .component import PComponent
-from .context import Context
+from .rendering_context import RenderingContext
 from .plugin_system import register_plugin_socket, plugin_registerer
 
 
@@ -25,7 +25,7 @@ class PRenderer(Protocol):
     def get_renderer_name(self) -> str:
         """Return the name of the component's renderer."""
 
-    def render(self, context: Context, component: PComponent) -> Any:
+    def render(self, context: RenderingContext, component: PComponent) -> Any:
         """Render the given component in the context."""
 
 

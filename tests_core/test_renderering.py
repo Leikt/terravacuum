@@ -3,7 +3,7 @@ import unittest
 from mock_factories import MockComponent, MockParentComponent
 from mock_rendering import MockRendererNoExpression, MockRendererWithExpression, MockParentRenderer
 from terravacuum import PluginLoader, get_component_factory, get_renderer_class, register_core_plugins, \
-    create_context
+    create_rendering_context
 
 
 class TestRendering(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestRendering(unittest.TestCase):
         PluginLoader.load_plugin('mock_rendering')
 
     def test_simple_rendering(self):
-        context = create_context()
+        context = create_rendering_context()
         component_factory = get_component_factory('mock')
         component: MockComponent = component_factory({'name': 'TEST', 'first_name': 'TEST2'})  # type: ignore
         renderer_class = get_renderer_class('mock_simple')
@@ -28,7 +28,7 @@ class TestRendering(unittest.TestCase):
     def test_rendering_with_data(self):
         data = {'person': {'first_name': 'Jean', 'last_name': 'DUPONT', 'phone': 'XXXXXXXXXXXX'}}
         variables = {'enterprise': 'Joe.CORP'}
-        context = create_context(data, variables)
+        context = create_rendering_context(data, variables)
         component_factory = get_component_factory('mock')
         component: MockComponent = component_factory(  # type: ignore
             {'name': '$.person.last_name', 'first_name': '$.person.first_name'})
@@ -44,7 +44,7 @@ class TestRendering(unittest.TestCase):
     def test_nested(self):
         data = {'person': {'first_name': 'Jean', 'last_name': 'DUPONT', 'phone': 'XXXXXXXXXXXX'}}
         variables = {'enterprise': 'Joe.CORP'}
-        context = create_context(data, variables)
+        context = create_rendering_context(data, variables)
 
         component_factory = get_component_factory('mocks')
         component: MockParentComponent = component_factory(  # type: ignore
