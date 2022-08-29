@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, Context, get_renderer_class
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
 from terravacuum.core_plugins.terraform_generic.components import BlankLinesComponent
 
 
@@ -24,7 +24,7 @@ class TestBlankLines(unittest.TestCase):
     def test_renderer(self):
         factory = get_component_factory('blank_lines')
         component = factory('3')
-        context = Context({}, {})
+        context = create_context()
         renderer_c = get_renderer_class('blank_lines')
         renderer = renderer_c()
         actual = renderer.render(context, component)

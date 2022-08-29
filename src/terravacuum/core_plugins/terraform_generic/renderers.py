@@ -1,4 +1,3 @@
-import os.path
 from dataclasses import dataclass
 from typing import Any
 
@@ -147,10 +146,5 @@ class ProjectRenderer(CodeRenderer):
 
     def render(self, context: Context, component: PComponent) -> str:
         component: ProjectComponent
-        original_directory = os.getcwd()
-        directory = component.directory
-        os.makedirs(directory, exist_ok=True)
-        os.chdir(directory)
         render_components(context, component.children, 0)
-        os.chdir(original_directory)
         return ''

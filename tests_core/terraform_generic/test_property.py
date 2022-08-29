@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, Context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
 from terravacuum.core_plugins.terraform_generic.components import PropertyComponent
 
 
@@ -30,10 +30,10 @@ class TestProperty(unittest.TestCase):
         renderer = renderer_c(0)
 
         expected = f"\"{component.name}\" = {component.value}\n"
-        actual = renderer.render(Context({}, {}), component)
+        actual = renderer.render(create_context(), component)
         self.assertEqual(expected, actual)
 
         renderer_indent = renderer_c(1)
         expected = f"\t\"{component.name}\" = {component.value}\n"
-        actual = renderer_indent.render(Context({}, {}), component)
+        actual = renderer_indent.render(create_context(), component)
         self.assertEqual(expected, actual)

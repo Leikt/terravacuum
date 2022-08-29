@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, Context, get_renderer_class
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
 from terravacuum.core_plugins.terraform_generic.components import CommentComponent
 
 
@@ -30,7 +30,7 @@ class TestTGComments(unittest.TestCase):
     def test_renderer(self):
         factory = get_component_factory('comment')
         component = factory(['First', 'Second'])
-        context = Context({}, {})
+        context = create_context()
 
         renderer_c = get_renderer_class('comment')
         renderer = renderer_c()
@@ -41,7 +41,7 @@ class TestTGComments(unittest.TestCase):
     def test_renderer_with_indent(self):
         factory = get_component_factory('comment')
         component = factory(['First', 'Second'])
-        context = Context({}, {})
+        context = create_context()
 
         renderer_c = get_renderer_class('comment')
         renderer = renderer_c(1)
