@@ -23,7 +23,7 @@ class TestFile(unittest.TestCase):
         component = factory(
             {'destination': 'data_tests/created_file.tf', 'children': [{'property': 'name=Name value=Test'}]})
         self.assertIsInstance(component, FileComponent)
-        renderer_c = get_renderer_class('file')
+        renderer_c = get_renderer_class(component.get_renderer_name())
         renderer = renderer_c(0)
         context = create_context({}, {})
 

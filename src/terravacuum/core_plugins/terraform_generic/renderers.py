@@ -1,10 +1,11 @@
+import os.path
 from dataclasses import dataclass
 from typing import Any
 
 from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression, get_renderer_class, \
     create_context, save_to_file, render_components
 from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent, \
-    LoopComponent, ContainerComponent, FileComponent
+    LoopComponent, ContainerComponent, FileComponent, ProjectComponent
 
 
 def register_renderers() -> RendererRegistration:
@@ -16,6 +17,7 @@ def register_renderers() -> RendererRegistration:
     yield 'loop', LoopRenderer
     yield 'container', ContainerRenderer
     yield 'file', FileRenderer
+    yield 'project', ProjectRenderer
 
 
 class DataTypeError(Exception):
@@ -130,9 +132,25 @@ class ContainerRenderer(CodeRenderer):
 
 
 class FileRenderer(CodeRenderer):
+    """Render the children and store it to a file."""
+
     def render(self, context: Context, component: PComponent) -> str:
         component: FileComponent
         result = render_components(context, component.children, self.indentation)
         destination = parse_expression(component.destination, context)
         save_to_file(destination, result)
+        return ''
+
+
+class ProjectRenderer(CodeRenderer):
+    """Render the children inside the directory."""
+
+    def render(self, context: Context, component: PComponent) -> str:
+        component: ProjectComponent
+        original_directory = os.getcwd()
+        directory = component.directory
+        os.makedirs(directory, exist_ok=True)
+        os.chdir(directory)
+        render_components(context, component.children, 0)
+        os.chdir(original_directory)
         return ''
