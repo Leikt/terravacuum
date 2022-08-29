@@ -7,7 +7,7 @@ from terravacuum import ComponentFactoryRegistration, component_factory, Inline,
 def register_component_factories() -> ComponentFactoryRegistration:
     # yield 'project', factory_project
     # yield 'module', factory_module
-    # yield 'file', factory_file
+    yield 'file', factory_file
     yield 'section', factory_section
     yield 'header', factory_header
     yield 'property', factory_property
@@ -66,3 +66,8 @@ def factory_include(data: Union[dict, str]) -> ComponentFactoryReturn:
 
     children = create_children(children_data)
     return 'container', {'children': children}
+
+
+@component_factory(children=True)
+def factory_file(data: dict) -> ComponentFactoryReturn:
+    return 'file', data

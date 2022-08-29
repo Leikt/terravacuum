@@ -7,7 +7,7 @@ from terravacuum import ComponentRegistration, PComponent
 def register_components() -> ComponentRegistration:
     # yield 'project', InfraComponent
     # yield 'module', ModuleComponent
-    # yield 'file', FileComponent
+    yield 'file', FileComponent
     yield 'section', SectionComponent
     yield 'header', HeaderComponent
     yield 'property', PropertyComponent
@@ -83,3 +83,9 @@ class ContainerComponent:
 
     def get_renderer_name(self) -> str:
         return 'container'
+
+
+@dataclass
+class FileComponent:
+    destination: str
+    children: list[PComponent]

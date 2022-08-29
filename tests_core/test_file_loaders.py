@@ -18,6 +18,10 @@ class TestFileLoaders(unittest.TestCase):
         data = load_file('data_tests/test_plugin_json_loader.json')
         self.assertEqual(data['Author'], 'Robin LIORET')
 
+    def test_load_tf(self):
+        data = load_file('data_tests/test_plugin_tf_loader.tf')
+        self.assertEqual('LOADED', data)
+
     def test_load_yaml(self):
         data = load_file('data_tests/test_plugin_yml_loader.yml')
         self.assertEqual(data['Author'], 'Robin LIORET')
@@ -41,4 +45,12 @@ class TestFileLoaders(unittest.TestCase):
         self.assertTrue(result)
         self.assertTrue(os.path.isfile('data_tests/test_save_file.yml'))
         data2 = load_file('data_tests/test_save_file.yml')
+        self.assertEqual(data2, data1)
+
+    def test_save_tf(self):
+        data1 = 'SAVED'
+        result = save_to_file('data_tests/test_save_file.tf', data1)
+        self.assertTrue(result)
+        self.assertTrue(os.path.isfile('data_tests/test_save_file.tf'))
+        data2 = load_file('data_tests/test_save_file.tf')
         self.assertEqual(data2, data1)

@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from typing import Any
 
 from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression, get_renderer_class, \
-    create_context
+    create_context, save_to_file, render_components
 from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent, \
-    LoopComponent, ContainerComponent
+    LoopComponent, ContainerComponent, FileComponent
 
 
 def register_renderers() -> RendererRegistration:
@@ -138,3 +138,11 @@ class ContainerRenderer(CodeRenderer):
             renderer = renderer_c(self.indentation)
             content.append(renderer.render(context, child))
         return ''.join(content)
+
+
+class FileRenderer(CodeRenderer):
+    def render(self, context: Context, component: PComponent) -> str:
+        component: FileComponent
+        result = render_components(context, component.children, self.indentation)
+        save_to_file(component.destination, result)
+        return ''

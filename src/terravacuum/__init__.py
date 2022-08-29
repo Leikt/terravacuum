@@ -19,4 +19,4 @@ from .component_factory_helpers import component_factory, WrongDataTypeError, Mi
 from .renderer import PRenderer, RendererNotFound, get_renderer_class, RendererRegistration
 from .renderer_factory import get_renderer_factory, RendererFactoryNotFound, RendererFactory, \
     RendererFactoryRegistration, RendererFactoryReturn, WrongArgumentForRendererConstructor
-from .renderer_helpers import tab
+from .renderer_helpers import tab, render_components
