@@ -25,7 +25,7 @@ class TestFile(unittest.TestCase):
         self.assertIsInstance(component, FileComponent)
         renderer_c = get_renderer_class(component.get_renderer_name())
         renderer = renderer_c(0)
-        context = create_context({}, {})
+        context = create_context()
 
         actual = renderer.render(context, component)  # type: ignore
         expected = ''

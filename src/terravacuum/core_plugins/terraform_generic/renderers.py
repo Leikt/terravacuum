@@ -1,3 +1,4 @@
+import os.path
 from dataclasses import dataclass
 from typing import Any
 
@@ -117,7 +118,7 @@ class LoopRenderer(CodeRenderer):
         data = self.initialize_data_loop(context, component.through)
         content = []
         for d in data:
-            child_context = create_context(d, context.variables)
+            child_context = create_context(parent=context, data=d)
             content.append(render_components(child_context, component.children, self.indentation))
         return ''.join(content)
 
@@ -135,7 +136,9 @@ class FileRenderer(CodeRenderer):
 
     def render(self, context: Context, component: PComponent) -> str:
         component: FileComponent
-        result = render_components(context, component.children, self.indentation)
+        wd = os.path.join(context.working_directory, component.destination)
+        children_context = create_context(working_directory=wd, parent=context)
+        result = render_components(children_context, component.children, self.indentation)
         destination = parse_expression(component.destination, context)
         save_to_file(destination, result)
         return ''
@@ -146,5 +149,7 @@ class ProjectRenderer(CodeRenderer):
 
     def render(self, context: Context, component: PComponent) -> str:
         component: ProjectComponent
-        render_components(context, component.children, 0)
+        wd = os.path.join(context.working_directory, component.directory)
+        children_context = create_context(working_directory=wd, parent=context)
+        render_components(children_context, component.children, 0)
         return ''
