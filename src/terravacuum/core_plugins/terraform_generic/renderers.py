@@ -15,6 +15,7 @@ def register_renderers() -> RendererRegistration:
     yield 'section', SectionRenderer
     yield 'loop', LoopRenderer
     yield 'container', ContainerRenderer
+    yield 'file', FileRenderer
 
 
 class DataTypeError(Exception):
@@ -144,5 +145,6 @@ class FileRenderer(CodeRenderer):
     def render(self, context: Context, component: PComponent) -> str:
         component: FileComponent
         result = render_components(context, component.children, self.indentation)
-        save_to_file(component.destination, result)
+        destination = parse_expression(component.destination, context)
+        save_to_file(destination, result)
         return ''
