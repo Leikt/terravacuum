@@ -4,7 +4,7 @@ from typing import Any
 from terravacuum import RendererRegistration, PComponent, Context, tab, parse_expression, get_renderer_class, \
     create_context
 from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent, \
-    LoopComponent
+    LoopComponent, ContainerComponent
 
 
 def register_renderers() -> RendererRegistration:
@@ -14,6 +14,7 @@ def register_renderers() -> RendererRegistration:
     yield 'header', HeaderRenderer
     yield 'section', SectionRenderer
     yield 'loop', LoopRenderer
+    yield 'container', ContainerRenderer
 
 
 class DataTypeError(Exception):
@@ -123,4 +124,17 @@ class LoopRenderer(CodeRenderer):
                 renderer_c = get_renderer_class(child.get_renderer_name())
                 renderer = renderer_c(self.indentation)
                 content.append(renderer.render(child_context, child))
+        return ''.join(content)
+
+
+class ContainerRenderer(CodeRenderer):
+    """Render the children of the component"""
+
+    def render(self, context: Context, component: PComponent) -> str:
+        component: ContainerComponent
+        content = []
+        for child in component.children:
+            renderer_c = get_renderer_class(child.get_renderer_name())
+            renderer = renderer_c(self.indentation)
+            content.append(renderer.render(context, child))
         return ''.join(content)

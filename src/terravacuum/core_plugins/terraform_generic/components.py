@@ -79,7 +79,7 @@ class LoopComponent:
 @dataclass
 class ContainerComponent:
     """Component that represent a component that only contains other components."""
-    children: str
+    children: list[PComponent]
 
     def get_renderer_name(self) -> str:
         return 'container'
