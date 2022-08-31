@@ -1,4 +1,3 @@
-import os.path
 from dataclasses import dataclass
 from typing import Any
 
@@ -137,11 +136,8 @@ class FileRenderer(CodeRenderer):
     def render(self, context: RenderingContext, component: PComponent) -> str:
         component: FileComponent
         destination = parse_expression(component.destination, context)
-        directory = os.path.dirname(destination)
-        filename = os.path.basename(destination)
-        with change_working_directory(directory):
-            result = render_components(context, component.children, self.indentation)
-            save_to_file(filename, result)
+        result = render_components(context, component.children, self.indentation)
+        save_to_file(destination, result)
         return ''
 
 
@@ -150,8 +146,7 @@ class ProjectRenderer(CodeRenderer):
 
     def render(self, context: RenderingContext, component: PComponent) -> str:
         component: ProjectComponent
-        wd = os.path.join(context.working_directory, component.directory)
-        with change_working_directory(wd):
-            children_context = create_rendering_context(working_directory=wd, parent=context)
+        with change_working_directory(component.directory):
+            children_context = create_rendering_context(parent=context)
             render_components(children_context, component.children, 0)
         return ''

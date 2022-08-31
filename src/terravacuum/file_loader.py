@@ -49,6 +49,7 @@ def load_file(filename: str) -> Optional[Any]:
 
 def save_to_file(filename: str, data: Any) -> bool:
     """Use the file loaders plugins to save data to the file. Return False if no plugin can handle the extension"""
+    create_dir(filename)
     for plugin in FileLoaderPluginSocket.get_plugins():
         if plugin.save(filename, data):
             return True
@@ -65,3 +66,13 @@ def change_working_directory(path: str, create: bool = True):
         yield
     finally:
         os.chdir(old_dir)
+
+
+def create_dir(filename: str):
+    basedir = os.path.dirname(filename)
+    if basedir == '':
+        return
+    if os.path.isdir(basedir):
+        return
+
+    os.makedirs(basedir, exist_ok=True)

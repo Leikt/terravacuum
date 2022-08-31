@@ -2,10 +2,9 @@ import re
 from enum import Enum
 from typing import Any
 
-from . import change_working_directory
-from .context import ComponentContext, create_component_context
 from .component import PComponent, ComponentPluginSocket
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
+from .context import ComponentContext, create_component_context
 
 
 class WrongDataTypeError(Exception):
@@ -58,7 +57,8 @@ def create_component(context: ComponentContext, data: dict) -> PComponent:
     keyword = list(data.keys())[0]
     factory = get_component_factory(keyword)
     child_context = create_component_context(parent=context)
-    return factory(child_context, data[keyword])
+    component = factory(child_context, data[keyword])
+    return component
 
 
 def _create_component(keyword: str, data: dict) -> PComponent:
@@ -128,8 +128,7 @@ def component_factory(inline: list[Inline] = None, children: bool = False, child
             if inline:
                 data = _process_inline(inline, data)
             if children and children_key in data:
-                with change_working_directory(context.working_directory):
-                    data[children_key] = create_children(context, data[children_key])
+                data[children_key] = create_children(context, data[children_key])
             keyword, data = function(context, data, *args, **kwargs)
             return _create_component(keyword, data)
 
