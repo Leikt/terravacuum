@@ -1,7 +1,7 @@
 import os.path
 import unittest
 
-from terravacuum import load_file, save_to_file, PluginLoader
+from terravacuum import load_file, save_to_file, PluginLoader, change_working_directory
 
 
 class TestFileLoaders(unittest.TestCase):
@@ -54,3 +54,12 @@ class TestFileLoaders(unittest.TestCase):
         self.assertTrue(os.path.isfile('data_tests/test_save_file.tf'))
         data2 = load_file('data_tests/test_save_file.tf')
         self.assertEqual(data2, data1)
+
+    def test_other_dir(self):
+        cur_dir = os.getcwd()
+        self.assertEqual(os.getcwd(), cur_dir)
+        with change_working_directory('data_tests/'):
+            self.assertNotEqual(cur_dir, os.getcwd())
+
+        with change_working_directory('data_tests/dummy/dummy/'):
+            self.assertTrue(os.path.exists('existing_file'))

@@ -6,7 +6,7 @@ from .context import RenderingContext, ComponentContext, create_rendering_contex
 from .core_plugins import register_core_plugins
 
 # Import modules with plugin sockets
-from .file_loader import PFileLoader, load_file, save_to_file
+from .file_loader import PFileLoader, load_file, save_to_file, change_working_directory
 from .expression_parsing import PExpressionParser, parse_expression, ExpressionParsingResult
 from .data_collector import PDataCollector, DataCollectorNotFoundError, collect_data
 

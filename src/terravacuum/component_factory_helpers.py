@@ -2,6 +2,7 @@ import re
 from enum import Enum
 from typing import Any
 
+from . import change_working_directory
 from .context import ComponentContext, create_component_context
 from .component import PComponent, ComponentPluginSocket
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
@@ -127,7 +128,8 @@ def component_factory(inline: list[Inline] = None, children: bool = False, child
             if inline:
                 data = _process_inline(inline, data)
             if children and children_key in data:
-                data[children_key] = create_children(context, data[children_key])
+                with change_working_directory(context.working_directory):
+                    data[children_key] = create_children(context, data[children_key])
             keyword, data = function(context, data, *args, **kwargs)
             return _create_component(keyword, data)
 

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from terravacuum import RendererRegistration, PComponent, RenderingContext, tab, parse_expression, get_renderer_class, \
-    create_rendering_context, save_to_file, render_components
+    create_rendering_context, save_to_file, render_components, change_working_directory
 from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent, \
     LoopComponent, ContainerComponent, FileComponent, ProjectComponent
 
@@ -136,11 +136,12 @@ class FileRenderer(CodeRenderer):
 
     def render(self, context: RenderingContext, component: PComponent) -> str:
         component: FileComponent
-        wd = os.path.join(context.working_directory, component.destination)
-        children_context = create_rendering_context(working_directory=wd, parent=context)
-        result = render_components(children_context, component.children, self.indentation)
         destination = parse_expression(component.destination, context)
-        save_to_file(destination, result)
+        directory = os.path.dirname(destination)
+        filename = os.path.basename(destination)
+        with change_working_directory(directory):
+            result = render_components(context, component.children, self.indentation)
+            save_to_file(filename, result)
         return ''
 
 
@@ -150,6 +151,7 @@ class ProjectRenderer(CodeRenderer):
     def render(self, context: RenderingContext, component: PComponent) -> str:
         component: ProjectComponent
         wd = os.path.join(context.working_directory, component.directory)
-        children_context = create_rendering_context(working_directory=wd, parent=context)
-        render_components(children_context, component.children, 0)
+        with change_working_directory(wd):
+            children_context = create_rendering_context(working_directory=wd, parent=context)
+            render_components(children_context, component.children, 0)
         return ''

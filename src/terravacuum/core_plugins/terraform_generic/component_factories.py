@@ -1,7 +1,8 @@
+import os
 from typing import Union
 
 from terravacuum import ComponentFactoryRegistration, component_factory, Inline, ComponentFactoryReturn, \
-    get_component_factory, load_file, create_children, ComponentContext
+    get_component_factory, load_file, create_children, ComponentContext, create_component_context
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
@@ -73,6 +74,9 @@ def factory_file(context: ComponentContext, data: dict) -> ComponentFactoryRetur
     return 'file', data
 
 
-@component_factory(children=True)
+@component_factory()
 def factory_project(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+    data['directory'] = os.path.join(context.working_directory, data['directory'])
+    children_context = create_component_context(parent=context)
+    data['children'] = create_children(children_context, data['children'])
     return 'project', data

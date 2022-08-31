@@ -1,4 +1,6 @@
 import logging
+import os
+from contextlib import contextmanager
 from typing import Protocol, Optional, Any
 
 from .plugin_system import register_plugin_socket, plugin_registerer
@@ -52,3 +54,14 @@ def save_to_file(filename: str, data: Any) -> bool:
             return True
     logging.warning('No plugin is save data to {}'.format(filename))
     return False
+
+
+@contextmanager
+def change_working_directory(path: str, create: bool = True):
+    old_dir = os.getcwd()
+    os.makedirs(path, exist_ok=True)
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(old_dir)
