@@ -2,7 +2,7 @@ import logging
 from typing import Protocol, Callable, Any
 
 from .component import PComponent
-from .rendering_context import RenderingContext
+from .context import RenderingContext
 from .plugin_system import register_plugin_socket, plugin_registerer
 
 

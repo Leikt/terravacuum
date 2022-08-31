@@ -23,3 +23,13 @@ class TestRenderingContext(unittest.TestCase):
         self.assertIsInstance(context_child, RenderingContext)
         self.assertEqual(12, context_child.data['child_v'])
         self.assertEqual('/test', context_child.working_directory)
+
+    def test_others(self):
+        context = create_rendering_context()
+        context['test'] = 12
+        self.assertEqual(12, context['test'])
+
+    def test_others_inheritance(self):
+        context = create_rendering_context(others={'test': 'something'})
+        child_context = create_rendering_context(parent=context)
+        self.assertEqual('something', child_context['test'])

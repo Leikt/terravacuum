@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Protocol, Any, Optional
 
 from .plugin_system import register_plugin_socket, plugin_registerer
-from .rendering_context import RenderingContext
+from .context import RenderingContext
 
 
 class ExpressionParsingResult(Enum):
