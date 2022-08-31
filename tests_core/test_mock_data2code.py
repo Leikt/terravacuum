@@ -42,10 +42,6 @@ class TestMockData2Code(unittest.TestCase):
         register_core_plugins()
         PluginLoader.load_plugin('mock_data2code')
 
-    # def test_renderer_factory(self):
-    #     function_renderer_factory = get_renderer('function')
-    #     function_renderer = function_renderer_factory(0)
-
     def test_render_function(self):
         # Component
         component_factory = get_component_factory('m2d-function')

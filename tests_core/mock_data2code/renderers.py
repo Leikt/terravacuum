@@ -8,11 +8,6 @@ def register_renderers() -> RendererRegistration:
     yield 'm2d-header', render_function_header
 
 
-#
-# def register_renderer_factories() -> RendererFactoryRegistration:
-#     yield 'function', factory_function_renderer
-
-
 def tab(context: Context):
     return '\t' * context.get('indentation', 0)
 
