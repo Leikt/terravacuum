@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer, create_context
 from terravacuum.core_plugins.terraform_generic.components import CommentComponent
 
 
@@ -36,9 +36,8 @@ class TestTGComments(unittest.TestCase):
         component = factory(ctx_component, ['First', 'Second'])
         ctx_rendering = create_context()
 
-        renderer_c = get_renderer_class('comment')
-        renderer = renderer_c()
-        actual = renderer.render(ctx_rendering, component)
+        renderer = get_renderer('comment')
+        actual = renderer(ctx_rendering, component)
         expected = '# First\n# Second\n'
         self.assertEqual(expected, actual)
 
@@ -46,10 +45,9 @@ class TestTGComments(unittest.TestCase):
         factory = get_component_factory('comment')
         ctx_component = create_context()
         component = factory(ctx_component, ['First', 'Second'])
-        ctx_rendering = create_context()
+        ctx_rendering = create_context(indentation=1)
 
-        renderer_c = get_renderer_class('comment')
-        renderer = renderer_c(1)
-        actual = renderer.render(ctx_rendering, component)
+        renderer = get_renderer('comment')
+        actual = renderer(ctx_rendering, component)
         expected = '\t# First\n\t# Second\n'
         self.assertEqual(expected, actual)

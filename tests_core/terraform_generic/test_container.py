@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, create_context, get_renderer_class
+from terravacuum import register_core_plugins, get_component_factory, create_context, get_renderer
 from terravacuum.core_plugins.terraform_generic.components import ContainerComponent
 
 
@@ -32,13 +32,12 @@ class TestContainer(unittest.TestCase):
         ctx_component = create_context()
         component = factory(ctx_component, 'data_tests/test_include.yml')
         ctx_rendering = create_context()
-        renderer_c = get_renderer_class('container')
-        renderer = renderer_c(0)
+        renderer = get_renderer('container')
 
         expected = """person {
 \tLastName = George
 \tFirstName = MIETTAUX
 }
 """
-        actual = renderer.render(ctx_rendering, component)
+        actual = renderer(ctx_rendering, component)
         self.assertEqual(expected, actual)

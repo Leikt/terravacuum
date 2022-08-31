@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer, create_context
 from terravacuum.core_plugins.terraform_generic.components import LoopComponent, PropertyComponent
 
 
@@ -29,20 +29,18 @@ class TestLoop(unittest.TestCase):
         data = {'instances': [{'name': 'A'}, {'name': 'B'}, {'name': 'C'}]}
         variables = {'client': 'D.CORP'}
         ctx_rendering = create_context(data=data, variables=variables)
-        renderer_c = get_renderer_class('loop')
-
-        renderer = renderer_c(0)
+        renderer = get_renderer('loop')
         expected = """Name = "D.CORP - A"
 Name = "D.CORP - B"
 Name = "D.CORP - C"
 """
-        actual = renderer.render(ctx_rendering, component)
+        actual = renderer(ctx_rendering, component)
         self.assertEqual(expected, actual)
 
-        renderer = renderer_c(2)
+        ctx_rendering['indentation'] = 2
         expected = """\t\tName = "D.CORP - A"
 \t\tName = "D.CORP - B"
 \t\tName = "D.CORP - C"
 """
-        actual = renderer.render(ctx_rendering, component)
+        actual = renderer(ctx_rendering, component)
         self.assertEqual(expected, actual)

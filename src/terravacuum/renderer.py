@@ -1,5 +1,5 @@
 import logging
-from typing import Protocol, Callable, Any
+from typing import Callable, Any
 
 from .component import PComponent
 from .context import Context
@@ -15,25 +15,17 @@ class RendererNotFound(Exception):
         super().__init__(self.message)
 
 
+Renderer = Callable[[Context, PComponent], Any]
+"""Renderer type."""
+
 RendererRegistration = tuple[str, type]
 """Return type for the register_renderers plugin functions."""
-
-
-class PRenderer(Protocol):
-    """A component of the template, it is able to process data to a renderer"""
-
-    def get_renderer_name(self) -> str:
-        """Return the name of the component's renderer."""
-
-    def render(self, context: Context, component: PComponent) -> Any:
-        """Render the given component in the context."""
-
 
 @register_plugin_socket
 class RendererPluginSocket:
     """Plugin socket for the components."""
 
-    __renderers: dict[str, type] = {}
+    __renderers: dict[str, Renderer] = {}
 
     @classmethod
     @plugin_registerer('register_renderers')
@@ -46,12 +38,12 @@ class RendererPluginSocket:
         cls.__renderers[keyword] = renderer
 
     @classmethod
-    def get_renderer_class(cls, keyword: str) -> Callable[[...], PRenderer]:
+    def get_renderer(cls, keyword: str) -> Renderer:
         if keyword not in cls.__renderers:
             raise RendererNotFound(keyword)
         return cls.__renderers[keyword]
 
 
-def get_renderer_class(keyword: str) -> Callable[[], PRenderer]:
+def get_renderer(keyword: str) -> Renderer:
     """Get the renderer class from the given keyword"""
-    return RendererPluginSocket.get_renderer_class(keyword)
+    return RendererPluginSocket.get_renderer(keyword)

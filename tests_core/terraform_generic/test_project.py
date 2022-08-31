@@ -2,7 +2,7 @@ import os
 import shutil
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context, \
+from terravacuum import register_core_plugins, get_component_factory, get_renderer, create_context, \
     load_file
 from terravacuum.core_plugins.terraform_generic.components import ProjectComponent
 
@@ -20,7 +20,6 @@ class TestProject(unittest.TestCase):
         component = factory(ctx_component, {'directory': 'data_tests/project_test/', 'children': [
             {'file': {'destination': 'test.tf', 'children': [{'property': 'name=Name value=TEST'}]}}]})
         self.assertIsInstance(component, ProjectComponent)
-        # self.assertEqual('data_tests/project_test/', component.directory)
         self.assertEqual(1, len(component.children))
 
     def test_renderer(self):
@@ -33,11 +32,10 @@ class TestProject(unittest.TestCase):
         self.assertIsInstance(component, ProjectComponent)
         ctx_rendering = create_context()
 
-        renderer_c = get_renderer_class(component.get_renderer_name())
-        renderer = renderer_c()
+        renderer = get_renderer(component.get_renderer_name())
 
         expected = ''
-        actual = renderer.render(ctx_rendering, component)
+        actual = renderer(ctx_rendering, component)
         self.assertEqual(expected, actual)
 
         expected = """Name = TEST

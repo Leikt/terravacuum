@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context, \
+from terravacuum import register_core_plugins, get_component_factory, get_renderer, create_context, \
     load_file
 from terravacuum.core_plugins.terraform_generic.components import FileComponent
 
@@ -28,11 +28,10 @@ class TestFile(unittest.TestCase):
             ctx_component,
             {'destination': 'data_tests/created_file.tf', 'children': [{'property': 'name=Name value=Test'}]})
         self.assertIsInstance(component, FileComponent)
-        renderer_c = get_renderer_class(component.get_renderer_name())
-        renderer = renderer_c(0)
+        renderer = get_renderer(component.get_renderer_name())
         ctx_rendering = create_context()
 
-        actual = renderer.render(ctx_rendering, component)  # type: ignore
+        actual = renderer(ctx_rendering, component)  # type: ignore
         expected = ''
         self.assertEqual(expected, actual)
         self.assertTrue(os.path.isfile(component.destination))

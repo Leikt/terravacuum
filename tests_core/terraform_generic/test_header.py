@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer, create_context
 from terravacuum.core_plugins.terraform_generic.components import HeaderComponent
 
 
@@ -29,14 +29,13 @@ class TestHeader(unittest.TestCase):
 
     def test_renderer(self):
         factory = get_component_factory('header')
-        renderer_c = get_renderer_class('header')
+        renderer = get_renderer('header')
         ctx_rendering = create_context()
         ctx_component = create_context()
 
         component = factory(ctx_component, 'instance')
-        renderer = renderer_c(0)
-        self.assertEqual("instance {\n", renderer.render(ctx_rendering, component))
+        self.assertEqual("instance {\n", renderer(ctx_rendering, component))
 
         component = factory(ctx_component, {'keyword': 'instance', 'parameters': ['vm_name'], 'is_property': True})
-        renderer = renderer_c(1)
-        self.assertEqual("\tinstance \"vm_name\" = {\n", renderer.render(ctx_rendering, component))
+        ctx_rendering['indentation'] = 1
+        self.assertEqual("\tinstance \"vm_name\" = {\n", renderer(ctx_rendering, component))

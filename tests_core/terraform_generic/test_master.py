@@ -2,7 +2,7 @@ import os.path
 import shutil
 import unittest
 
-from terravacuum import register_core_plugins, load_file, create_component, get_renderer_class, \
+from terravacuum import register_core_plugins, load_file, create_component, get_renderer, \
     create_context, change_working_directory
 
 
@@ -33,7 +33,7 @@ class TestMaster(unittest.TestCase):
         with change_working_directory('data_tests/master/'):
             component = create_component(ctx_component, template)
 
-        renderer = get_renderer_class(component.get_renderer_name())()
+        renderer = get_renderer(component.get_renderer_name())
         with change_working_directory('data_tests/'):
-            renderer.render(ctx_rendering, component)
+            renderer(ctx_rendering, component)
 

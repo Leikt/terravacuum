@@ -6,22 +6,22 @@ from terravacuum import ComponentFactoryRegistration, ComponentRegistration, Com
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
-    yield 'function_header', factory_function_header
-    yield 'code_line', factory_code_line
-    yield 'function', factory_function
+    yield 'm2d-header', factory_function_header
+    yield 'm2d-line', factory_code_line
+    yield 'm2d-function', factory_function
 
 
 def register_components() -> ComponentRegistration:
-    yield 'function_header', FunctionHeaderComponent
-    yield 'code_line', CodeLineComponent
-    yield 'function', FunctionComponent
+    yield 'm2d-header', FunctionHeaderComponent
+    yield 'm2d-line', CodeLineComponent
+    yield 'm2d-function', FunctionComponent
 
 
 @component_factory(inline=[Inline.SINGLE])
 def factory_function_header(_context: Context, data: Union[str, dict]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'name': data}
-    return 'function_header', data
+    return 'm2d-header', data
 
 
 @component_factory(inline=[Inline.SINGLE])
@@ -30,17 +30,17 @@ def factory_code_line(_context: Context, data: Union[dict, str, list]) -> Compon
         data = {'code': [data]}
     if isinstance(data, list):
         data = {'code': data}
-    return 'code_line', data
+    return 'm2d-line', data
 
 
 @component_factory(children=True, children_key='lines')
 def factory_function(context: Context, data: dict):
-    header_factory = get_component_factory('function_header')
+    header_factory = get_component_factory('m2d-header')
     header = header_factory(context, data['header'])
-    line_factory = get_component_factory('code_line')
+    line_factory = get_component_factory('m2d-line')
     quick_lines = [line_factory(context, line) for line in data['quick_lines']]
     final_lines = data['lines'] + quick_lines
-    return 'function', {'header': header, 'lines': final_lines}
+    return 'm2d-function', {'header': header, 'lines': final_lines}
 
 
 @dataclass
@@ -48,7 +48,7 @@ class FunctionHeaderComponent:
     name: str
 
     def get_renderer_name(self) -> str:
-        return 'function_header'
+        return 'm2d-header'
 
 
 @dataclass
@@ -56,7 +56,7 @@ class CodeLineComponent:
     code: list[str]
 
     def get_renderer_name(self) -> str:
-        return 'code_line'
+        return 'm2d-line'
 
 
 @dataclass
@@ -65,4 +65,4 @@ class FunctionComponent:
     lines: list[CodeLineComponent]
 
     def get_renderer_name(self) -> str:
-        return 'function'
+        return 'm2d-function'
