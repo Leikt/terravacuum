@@ -1,6 +1,7 @@
 import unittest
 
-from terravacuum import create_context, Context
+from terravacuum import create_context, Context, register_core_plugins, parse_expression
+from terravacuum.core_plugins.expression_parser import MissingContextKeyError
 
 
 class TestContext(unittest.TestCase):
@@ -19,3 +20,9 @@ class TestContext(unittest.TestCase):
         self.assertIsInstance(ctx_child, Context)
         self.assertEqual('booooom', ctx_child['new_sound'])
         self.assertEqual('vrooom', ctx_child['data']['sound'])
+
+    def test_missing_error(self):
+        register_core_plugins()
+        context = create_context()
+        with self.assertRaises(MissingContextKeyError):
+            parse_expression('$.do_not_exists', context)

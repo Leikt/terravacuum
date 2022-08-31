@@ -6,6 +6,16 @@ from jsonpath_ng.ext import parse as parse_jsonpath
 from terravacuum import PExpressionParser, Context, ExpressionParsingResult
 
 
+class MissingContextKeyError(Exception):
+    """Exception raised when a context miss required information."""
+
+    def __init__(self, key: str, context: Context):
+        self.key = key
+        self.context = context
+        self.message = f"Missing key '{key}' in the context :\n{context}"
+        super().__init__(self.message)
+
+
 def register_expression_parsers() -> PExpressionParser:
     """Function called by the plugin loader to register the expression parsers."""
     yield CoreExpressionParer
@@ -28,17 +38,21 @@ def find_data(expr: str, dataset: Any) -> Optional[Any]:
     return found_data[0].value
 
 
+def _parse(expr: str, context: Context, key: str):
+    if key not in context:
+        raise MissingContextKeyError(key, context)
+    data = find_data(expr, context[key])
+    return ExpressionParsingResult.SUCCESS, data
+
+
 def parse_variable(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
     """Parse the expression inside the variables."""
-    expr = '$' + expr[1:]
-    data = find_data(expr, context.get('variables', {}))
-    return ExpressionParsingResult.SUCCESS, data
+    return _parse('$' + expr[1:], context, 'variables')
 
 
 def parse_data(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
     """Parse the expression inside the data."""
-    data = find_data(expr, context.get('data', {}))
-    return ExpressionParsingResult.SUCCESS, data
+    return _parse(expr, context, 'data')
 
 
 def parse_nested(expression: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
