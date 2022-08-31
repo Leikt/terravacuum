@@ -2,6 +2,7 @@ import re
 from enum import Enum
 from typing import Any
 
+from .context import ComponentContext
 from .component import PComponent, ComponentPluginSocket
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
 
@@ -47,7 +48,7 @@ class Inline(Enum):
     LIST = 'list'
 
 
-def create_component(data: dict) -> PComponent:
+def create_component(context: ComponentContext, data: dict) -> PComponent:
     """Helper function to create a child component."""
     if not isinstance(data, dict):
         raise WrongDataTypeError("dict", type(data))
@@ -55,7 +56,7 @@ def create_component(data: dict) -> PComponent:
         raise TooManyChildComponents(list(data.keys()))
     keyword = list(data.keys())[0]
     factory = get_component_factory(keyword)
-    return factory(data[keyword])
+    return factory(context, data[keyword])
 
 
 def _create_component(keyword: str, data: dict) -> PComponent:
@@ -80,12 +81,12 @@ def _parse_string_dict(data: Any) -> Any:
     return data
 
 
-def create_children(data: list[dict]) -> list[PComponent]:
+def create_children(context: ComponentContext, data: list[dict]) -> list[PComponent]:
     if not isinstance(data, list):
         raise WrongDataTypeError("list", type(data))
     children: list[PComponent] = []
     for child_data in data:
-        children.append(create_component(child_data))
+        children.append(create_component(context, child_data))
     return children
 
 
@@ -120,13 +121,13 @@ def component_factory(inline: list[Inline] = None, children: bool = False, child
     """Decorator that create the concrete component from the returned data"""
 
     def decorator(function):
-        def wrapper(data, *args, **kwargs) -> PComponent:
+        def wrapper(context: ComponentContext, data: Any, *args, **kwargs) -> PComponent:
             _check_data_type(data)
             if inline:
                 data = _process_inline(inline, data)
             if children and children_key in data:
-                data[children_key] = create_children(data[children_key])
-            keyword, data = function(data, *args, **kwargs)
+                data[children_key] = create_children(context, data[children_key])
+            keyword, data = function(context, data, *args, **kwargs)
             return _create_component(keyword, data)
 
         return wrapper

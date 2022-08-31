@@ -1,6 +1,7 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, \
+    create_component_context
 from terravacuum.core_plugins.terraform_generic.components import LoopComponent, PropertyComponent
 
 
@@ -11,7 +12,9 @@ class TestLoop(unittest.TestCase):
 
     def test_component(self):
         factory = get_component_factory('loop')
+        ctx_component = create_component_context()
         component = factory(
+            ctx_component,
             {'through': '$.instances', 'children': [{'property': 'name=Name value="{{~.client}} - {{$.name}}"'}]})
         self.assertIsInstance(component, LoopComponent)
         self.assertEqual('$.instances', component.through)
@@ -20,11 +23,13 @@ class TestLoop(unittest.TestCase):
 
     def test_renderer(self):
         factory = get_component_factory('loop')
+        ctx_component = create_component_context()
         component = factory(
+            ctx_component,
             {'through': '$.instances', 'children': [{'property': 'name=Name value="{{~.client}} - {{$.name}}"'}]})
         data = {'instances': [{'name': 'A'}, {'name': 'B'}, {'name': 'C'}]}
         variables = {'client': 'D.CORP'}
-        context = create_rendering_context(data=data, variables=variables)
+        ctx_rendering = create_rendering_context(data=data, variables=variables)
         renderer_c = get_renderer_class('loop')
 
         renderer = renderer_c(0)
@@ -32,7 +37,7 @@ class TestLoop(unittest.TestCase):
 Name = "D.CORP - B"
 Name = "D.CORP - C"
 """
-        actual = renderer.render(context, component)
+        actual = renderer.render(ctx_rendering, component)
         self.assertEqual(expected, actual)
 
         renderer = renderer_c(2)
@@ -40,5 +45,5 @@ Name = "D.CORP - C"
 \t\tName = "D.CORP - B"
 \t\tName = "D.CORP - C"
 """
-        actual = renderer.render(context, component)
+        actual = renderer.render(ctx_rendering, component)
         self.assertEqual(expected, actual)

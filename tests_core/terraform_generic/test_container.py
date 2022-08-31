@@ -1,6 +1,7 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, create_rendering_context, get_renderer_class
+from terravacuum import register_core_plugins, get_component_factory, create_rendering_context, get_renderer_class, \
+    create_component_context
 from terravacuum.core_plugins.terraform_generic.components import ContainerComponent
 
 
@@ -11,7 +12,8 @@ class TestContainer(unittest.TestCase):
 
     def test_normal(self):
         factory = get_component_factory('include')
-        component = factory({'source': 'data_tests/test_include.yml'})
+        ctx_component = create_component_context()
+        component = factory(ctx_component, {'source': 'data_tests/test_include.yml'})
         self.assertIsInstance(component, ContainerComponent)
         self.assertEqual(1, len(component.children))
         self.assertEqual('George', component.children[0].__getattribute__('children')[0].__getattribute__('value'))
@@ -19,7 +21,8 @@ class TestContainer(unittest.TestCase):
 
     def test_inline(self):
         factory = get_component_factory('include')
-        component = factory('data_tests/test_include.yml')
+        ctx_component = create_component_context()
+        component = factory(ctx_component, 'data_tests/test_include.yml')
         self.assertIsInstance(component, ContainerComponent)
         self.assertEqual(1, len(component.children))
         self.assertEqual('George', component.children[0].__getattribute__('children')[0].__getattribute__('value'))
@@ -27,8 +30,9 @@ class TestContainer(unittest.TestCase):
 
     def test_renderer(self):
         factory = get_component_factory('include')
-        component = factory('data_tests/test_include.yml')
-        context = create_rendering_context()
+        ctx_component = create_component_context()
+        component = factory(ctx_component, 'data_tests/test_include.yml')
+        ctx_rendering = create_rendering_context()
         renderer_c = get_renderer_class('container')
         renderer = renderer_c(0)
 
@@ -37,5 +41,5 @@ class TestContainer(unittest.TestCase):
 \tFirstName = MIETTAUX
 }
 """
-        actual = renderer.render(context, component)
+        actual = renderer.render(ctx_rendering, component)
         self.assertEqual(expected, actual)

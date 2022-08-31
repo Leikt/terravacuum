@@ -3,7 +3,7 @@ import unittest
 from mock_data2code.components import FunctionComponent
 from mock_data2code.renderers import FunctionRenderer
 from terravacuum import register_core_plugins, PluginLoader, get_renderer_factory, get_component_factory, \
-    create_rendering_context
+    create_rendering_context, create_component_context
 
 TEMPLATE = {
     'header': '$.name',
@@ -51,7 +51,8 @@ class TestMockData2Code(unittest.TestCase):
     def test_render_function(self):
         # Component
         component_factory = get_component_factory('function')
-        component = component_factory(TEMPLATE)
+        context = create_component_context()
+        component = component_factory(context, TEMPLATE)
         self.assertIsInstance(component, FunctionComponent)
 
         context = create_rendering_context(data=DATA)

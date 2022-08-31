@@ -3,7 +3,7 @@ import unittest
 from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
 from terravacuum import PluginLoader, get_component_factory, \
     WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, TooManyChildComponents, \
-    WrongInlineArgument
+    WrongInlineArgument, create_component_context
 
 
 class TestComponentFactories(unittest.TestCase):
@@ -13,16 +13,18 @@ class TestComponentFactories(unittest.TestCase):
 
     def test_mock_factory(self):
         factory = get_component_factory('mock')
-        component = factory({'first_name': 'Leikt', 'name': 'SolReihin'})
+        context = create_component_context()
+        component = factory(context, {'first_name': 'Leikt', 'name': 'SolReihin'})
         self.assertIsInstance(component, MockComponent)
         self.assertEqual('Leikt', component.first_name)
         self.assertEqual('SolReihin', component.name)
 
     def test_mock_raises(self):
         factory = get_component_factory('mock')
+        context = create_component_context()
         with self.assertRaises(WrongArgumentForComponentConstructor):
-            factory([])
-            factory("")
+            factory(context, [])
+            factory(context, "")
 
     def test_factory_not_found(self):
         with self.assertRaises(ComponentFactoryNotFound):
@@ -34,7 +36,8 @@ class TestComponentFactories(unittest.TestCase):
             'mock_child': {'name': 'A', 'first_name': 'AA'}
         }
         factory = get_component_factory('mocks')
-        component = factory(data)
+        context = create_component_context()
+        component = factory(context, data)
         self.assertIsInstance(component, MockParentComponent)
         self.assertEqual(data['destination'], component.destination)
         self.assertIsInstance(component.child, MockComponent)
@@ -47,11 +50,12 @@ class TestComponentFactories(unittest.TestCase):
             'mock_child': {'name': 'A'}
         }
         factory = get_component_factory('mocks')
+        context = create_component_context()
         with self.assertRaises(WrongArgumentForComponentConstructor):
-            factory(data)
-            factory(None)
-            factory("")
-            factory([])
+            factory(context, data)
+            factory(context, None)
+            factory(context, "")
+            factory(context, [])
 
     def test_auto_children(self):
         data = {
@@ -61,38 +65,45 @@ class TestComponentFactories(unittest.TestCase):
             ]
         }
         factory = get_component_factory('mock_auto_children')
-        component = factory(data)
+        context = create_component_context()
+        component = factory(context, data)
         self.assertIsInstance(component, MockWithChildrenComponent)
         self.assertEqual(2, len(component.children))
         self.assertIsInstance(component.children[0], MockComponent)
 
     def test_auto_children_raises(self):
         factory = get_component_factory('mock_auto_children')
+        context = create_component_context()
         with self.assertRaises(WrongDataTypeError):
-            factory(None)
-            factory({'children': 'wrong_type'})
+            factory(context, None)
+            factory(context, {'children': 'wrong_type'})
         with self.assertRaises(TooManyChildComponents):
-            factory({
-                'children': [
-                    {'mock1': {}, 'too_much': {}}
-                ]
-            })
+            factory(
+                context,
+                {
+                    'children': [
+                        {'mock1': {}, 'too_much': {}}
+                    ]
+                })
 
     def test_inline_dict(self):
         factory = get_component_factory('mock_with_inline_arguments')
-        component = factory('name=MIETTAUX first_name=George')
+        context = create_component_context()
+        component = factory(context, 'name=MIETTAUX first_name=George')
         self.assertIsInstance(component, MockComponent)
         self.assertEqual('George', component.first_name)
         self.assertEqual('MIETTAUX', component.name)
 
     def test_inline_single(self):
         factory = get_component_factory('mock_with_inline_arguments')
-        component = factory('George MIETTAUX')
+        context = create_component_context()
+        component = factory(context, 'George MIETTAUX')
         self.assertIsInstance(component, MockComponent)
         self.assertEqual('George', component.first_name)
         self.assertEqual('MIETTAUX', component.name)
 
     def test_inline_error(self):
         factory = get_component_factory('mock_with_inline_dict')
+        context = create_component_context()
         with self.assertRaises(WrongInlineArgument):
-            factory('George MIETTAUX')
+            factory(context, 'George MIETTAUX')

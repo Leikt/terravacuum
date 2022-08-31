@@ -1,6 +1,7 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, load_file
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, \
+    load_file, create_component_context
 from terravacuum.core_plugins.terraform_generic.components import ProjectComponent
 
 
@@ -11,7 +12,8 @@ class TestProject(unittest.TestCase):
 
     def test_component(self):
         factory = get_component_factory('project')
-        component = factory({'directory': 'data_tests/project_test/', 'children': [
+        ctx_component = create_component_context()
+        component = factory(ctx_component, {'directory': 'data_tests/project_test/', 'children': [
             {'file': {'destination': 'test.tf', 'children': [{'property': 'name=Name value=TEST'}]}}]})
         self.assertIsInstance(component, ProjectComponent)
         self.assertEqual('data_tests/project_test/', component.directory)
@@ -19,16 +21,19 @@ class TestProject(unittest.TestCase):
 
     def test_renderer(self):
         factory = get_component_factory('project')
-        component = factory({'directory': 'data_tests/project_test/', 'children': [
-            {'file': {'destination': 'test.tf', 'children': [{'property': 'name=Name value=TEST'}]}}]})
+        ctx_component = create_component_context()
+        component = factory(
+            ctx_component,
+            {'directory': 'data_tests/project_test/', 'children': [
+                {'file': {'destination': 'test.tf', 'children': [{'property': 'name=Name value=TEST'}]}}]})
         self.assertIsInstance(component, ProjectComponent)
-        context = create_rendering_context({}, {})
+        ctx_rendering = create_rendering_context({}, {})
 
         renderer_c = get_renderer_class(component.get_renderer_name())
         renderer = renderer_c()
 
         expected = ''
-        actual = renderer.render(context, component)
+        actual = renderer.render(ctx_rendering, component)
         self.assertEqual(expected, actual)
 
         expected = """Name = TEST

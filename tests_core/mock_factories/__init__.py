@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Union
 
 from terravacuum import ComponentFactoryRegistration, ComponentRegistration, component_factory, ComponentFactoryReturn, \
-    PComponent, get_component_factory, Inline
+    PComponent, get_component_factory, Inline, ComponentContext
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
@@ -20,14 +20,14 @@ def register_components() -> ComponentRegistration:
 
 
 @component_factory()
-def fabric_mock_component(data: dict) -> ComponentFactoryReturn:
+def fabric_mock_component(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
     return 'mocker', data
 
 
 @component_factory()
-def fabric_mock_parent_component(data: dict) -> ComponentFactoryReturn:
+def fabric_mock_parent_component(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
     mock_factory = get_component_factory('mock')
-    child = mock_factory(data['mock_child'])
+    child = mock_factory(context, data['mock_child'])
     data = {
         'destination': data['destination'],
         'child': child
@@ -36,12 +36,12 @@ def fabric_mock_parent_component(data: dict) -> ComponentFactoryReturn:
 
 
 @component_factory(children=True)
-def fabric_mock_auto_children(data: dict) -> ComponentFactoryReturn:
+def fabric_mock_auto_children(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
     return 'mock_with_children', data
 
 
 @component_factory(inline=[Inline.DICT, Inline.SINGLE])
-def fabric_mock_with_inline(data: Union[dict, str]) -> ComponentFactoryReturn:
+def fabric_mock_with_inline(context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         first_name, last_name = data.split(' ')
         data = {'name': last_name, 'first_name': first_name}
@@ -49,7 +49,7 @@ def fabric_mock_with_inline(data: Union[dict, str]) -> ComponentFactoryReturn:
 
 
 @component_factory(inline=[Inline.DICT])
-def fabric_mock_with_inline_dict(data: dict):
+def fabric_mock_with_inline_dict(context: ComponentContext, data: dict):
     return 'mocker', data
 
 

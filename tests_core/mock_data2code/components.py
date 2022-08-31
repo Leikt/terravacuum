@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Union
 
 from terravacuum import ComponentFactoryRegistration, ComponentRegistration, ComponentFactoryReturn, component_factory, \
-    get_component_factory, Inline
+    get_component_factory, Inline, ComponentContext
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
@@ -18,14 +18,14 @@ def register_components() -> ComponentRegistration:
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_function_header(data: Union[str, dict]) -> ComponentFactoryReturn:
+def factory_function_header(context: ComponentContext, data: Union[str, dict]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'name': data}
     return 'function_header', data
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_code_line(data: Union[dict, str, list]) -> ComponentFactoryReturn:
+def factory_code_line(context: ComponentContext, data: Union[dict, str, list]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'code': [data]}
     if isinstance(data, list):
@@ -34,11 +34,11 @@ def factory_code_line(data: Union[dict, str, list]) -> ComponentFactoryReturn:
 
 
 @component_factory(children=True, children_key='lines')
-def factory_function(data: dict):
+def factory_function(context: ComponentContext, data: dict):
     header_factory = get_component_factory('function_header')
-    header = header_factory(data['header'])
+    header = header_factory(context, data['header'])
     line_factory = get_component_factory('code_line')
-    quick_lines = [line_factory(line) for line in data['quick_lines']]
+    quick_lines = [line_factory(context, line) for line in data['quick_lines']]
     final_lines = data['lines'] + quick_lines
     return 'function', {'header': header, 'lines': final_lines}
 

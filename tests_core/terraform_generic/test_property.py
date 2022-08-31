@@ -1,6 +1,7 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, \
+    create_component_context
 from terravacuum.core_plugins.terraform_generic.components import PropertyComponent
 
 
@@ -11,21 +12,24 @@ class TestProperty(unittest.TestCase):
 
     def test_normal(self):
         factory = get_component_factory('property')
-        component = factory({'name': 'PropertyA', 'value': 'ValueA'})
+        ctx_component = create_component_context()
+        component = factory(ctx_component, {'name': 'PropertyA', 'value': 'ValueA'})
         self.assertIsInstance(component, PropertyComponent)
         self.assertEqual('PropertyA', component.name)
         self.assertEqual('ValueA', component.value)
 
     def test_inline(self):
         factory = get_component_factory('property')
-        component = factory('name=PropertyA value=ValueA')
+        ctx_component = create_component_context()
+        component = factory(ctx_component, 'name=PropertyA value=ValueA')
         self.assertIsInstance(component, PropertyComponent)
         self.assertEqual('PropertyA', component.name)
         self.assertEqual('ValueA', component.value)
 
     def test_renderer(self):
         factory = get_component_factory('property')
-        component: PropertyComponent = factory('name="Property A" value=ValueA')  # type: ignore
+        ctx_component = create_component_context()
+        component: PropertyComponent = factory(ctx_component, 'name="Property A" value=ValueA')  # type: ignore
         renderer_c = get_renderer_class('property')
         renderer = renderer_c(0)
 

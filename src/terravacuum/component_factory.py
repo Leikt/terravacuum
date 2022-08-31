@@ -1,6 +1,7 @@
 import logging
 from typing import Optional, Callable, Union
 
+from . import ComponentContext
 from .plugin_system import register_plugin_socket, plugin_registerer
 from .component import PComponent
 
@@ -23,7 +24,7 @@ class WrongArgumentForComponentConstructor(Exception):
         super().__init__(self.message)
 
 
-ComponentFactory = Callable[[Optional[Union[str, list, dict]]], PComponent]
+ComponentFactory = Callable[[ComponentContext, Optional[Union[str, list, dict]]], PComponent]
 """Function that create a component from the template data."""
 
 ComponentFactoryRegistration = tuple[str, ComponentFactory]
