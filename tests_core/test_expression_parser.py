@@ -17,7 +17,7 @@ class TestExpressionParser(unittest.TestCase):
 
     def test_data_expression(self):
         data = {'name': 'Jean Dupont', 'age': 32}
-        context = create_rendering_context(data)
+        context = create_rendering_context(data=data)
         self.assertEqual(data['age'], parse_expression("$.age", context))
         self.assertEqual(data['name'], parse_expression("$.name", context))
 
@@ -29,25 +29,25 @@ class TestExpressionParser(unittest.TestCase):
 
     def test_nested_expression(self):
         data = {'name': 'Jean Dupont', 'age': 32}
-        context = create_rendering_context(data)
+        context = create_rendering_context(data=data)
         self.assertEqual(f"Name={data['name']}", parse_expression("Name={{ $.name }}", context))
         self.assertEqual(f"Age={data['age']} Name={data['name']}",
                          parse_expression("Age={{ $.age }} Name={{ $.name }}", context))
 
     def test_complex_nested_expression(self):
         data = {'name': 'Jean Dupont', 'age': 32}
-        context = create_rendering_context(data, data)
+        context = create_rendering_context(data=data, variables=data)
         self.assertEqual(f"Age={data['age']} Name={data['name']}",
                          parse_expression("Age={{ $.age }} Name={{ ~.name }}", context))
 
     def test_key_error(self):
-        context = create_rendering_context({'name': 'Jean Dupont', 'age': 32})
+        context = create_rendering_context(data={'name': 'Jean Dupont', 'age': 32})
         with self.assertRaises(KeyError):
             parse_expression('$.no_key', context)
 
     def test_complex_jsonpath(self):
         data = {"name": "some", "tags": [{"Key": "Name", "Value": "SOMEDATA"}]}
-        context = create_rendering_context(data)
+        context = create_rendering_context(data=data)
         expr = "$.tags[?(@.Key == 'Name')].Value"
         self.assertEqual(data['tags'][0]['Value'], parse_expression(expr, context))
 

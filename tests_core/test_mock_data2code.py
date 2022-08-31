@@ -54,7 +54,7 @@ class TestMockData2Code(unittest.TestCase):
         component = component_factory(TEMPLATE)
         self.assertIsInstance(component, FunctionComponent)
 
-        context = create_rendering_context(DATA)
+        context = create_rendering_context(data=DATA)
 
         function_renderer_factory = get_renderer_factory('function')
         function_renderer = function_renderer_factory(0)

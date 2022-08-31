@@ -28,7 +28,7 @@ class TestRendering(unittest.TestCase):
     def test_rendering_with_data(self):
         data = {'person': {'first_name': 'Jean', 'last_name': 'DUPONT', 'phone': 'XXXXXXXXXXXX'}}
         variables = {'enterprise': 'Joe.CORP'}
-        context = create_rendering_context(data, variables)
+        context = create_rendering_context(data=data, variables=variables)
         component_factory = get_component_factory('mock')
         component: MockComponent = component_factory(  # type: ignore
             {'name': '$.person.last_name', 'first_name': '$.person.first_name'})
@@ -44,7 +44,7 @@ class TestRendering(unittest.TestCase):
     def test_nested(self):
         data = {'person': {'first_name': 'Jean', 'last_name': 'DUPONT', 'phone': 'XXXXXXXXXXXX'}}
         variables = {'enterprise': 'Joe.CORP'}
-        context = create_rendering_context(data, variables)
+        context = create_rendering_context(data=data, variables=variables)
 
         component_factory = get_component_factory('mocks')
         component: MockParentComponent = component_factory(  # type: ignore
