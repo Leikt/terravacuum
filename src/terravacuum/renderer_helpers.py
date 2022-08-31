@@ -2,14 +2,14 @@ from typing import Any
 
 from .renderer import get_renderer_class
 from .component import PComponent
-from .context import RenderingContext
+from .context import Context
 
 
 def tab(count: int) -> str:
     return '\t' * count
 
 
-def render_components(context: RenderingContext, components: list[PComponent], *args, **kwargs) -> list[Any]:
+def render_components(context: Context, components: list[PComponent], *args, **kwargs) -> list[Any]:
     """Render multiple components and return the result."""
     content = []
     for component in components:

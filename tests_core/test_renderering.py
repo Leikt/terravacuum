@@ -3,7 +3,7 @@ import unittest
 from mock_factories import MockComponent, MockParentComponent
 from mock_rendering import MockRendererNoExpression, MockRendererWithExpression, MockParentRenderer
 from terravacuum import PluginLoader, get_component_factory, get_renderer_class, register_core_plugins, \
-    create_rendering_context, create_component_context
+    create_context
 
 
 class TestRendering(unittest.TestCase):
@@ -14,8 +14,8 @@ class TestRendering(unittest.TestCase):
         PluginLoader.load_plugin('mock_rendering')
 
     def test_simple_rendering(self):
-        ctx_rendering = create_rendering_context()
-        ctx_component = create_component_context()
+        ctx_rendering = create_context()
+        ctx_component = create_context()
         component_factory = get_component_factory('mock')
         component: MockComponent = component_factory(  # type: ignore
             ctx_component,
@@ -31,8 +31,8 @@ class TestRendering(unittest.TestCase):
     def test_rendering_with_data(self):
         data = {'person': {'first_name': 'Jean', 'last_name': 'DUPONT', 'phone': 'XXXXXXXXXXXX'}}
         variables = {'enterprise': 'Joe.CORP'}
-        ctx_rendering = create_rendering_context(data=data, variables=variables)
-        ctx_component = create_component_context()
+        ctx_rendering = create_context(data=data, variables=variables)
+        ctx_component = create_context()
         component_factory = get_component_factory('mock')
         component: MockComponent = component_factory(  # type: ignore
             ctx_component,
@@ -50,8 +50,8 @@ class TestRendering(unittest.TestCase):
     def test_nested(self):
         data = {'person': {'first_name': 'Jean', 'last_name': 'DUPONT', 'phone': 'XXXXXXXXXXXX'}}
         variables = {'enterprise': 'Joe.CORP'}
-        ctx_rendering = create_rendering_context(data=data, variables=variables)
-        ctx_component = create_component_context()
+        ctx_rendering = create_context(data=data, variables=variables)
+        ctx_component = create_context()
 
         component_factory = get_component_factory('mocks')
         component: MockParentComponent = component_factory(  # type: ignore

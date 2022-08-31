@@ -1,7 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, create_rendering_context, get_renderer_class, \
-    create_component_context
+from terravacuum import register_core_plugins, get_component_factory, create_context, get_renderer_class
 from terravacuum.core_plugins.terraform_generic.components import ContainerComponent
 
 
@@ -12,7 +11,7 @@ class TestContainer(unittest.TestCase):
 
     def test_normal(self):
         factory = get_component_factory('include')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(ctx_component, {'source': 'data_tests/test_include.yml'})
         self.assertIsInstance(component, ContainerComponent)
         self.assertEqual(1, len(component.children))
@@ -21,7 +20,7 @@ class TestContainer(unittest.TestCase):
 
     def test_inline(self):
         factory = get_component_factory('include')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(ctx_component, 'data_tests/test_include.yml')
         self.assertIsInstance(component, ContainerComponent)
         self.assertEqual(1, len(component.children))
@@ -30,9 +29,9 @@ class TestContainer(unittest.TestCase):
 
     def test_renderer(self):
         factory = get_component_factory('include')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(ctx_component, 'data_tests/test_include.yml')
-        ctx_rendering = create_rendering_context()
+        ctx_rendering = create_context()
         renderer_c = get_renderer_class('container')
         renderer = renderer_c(0)
 

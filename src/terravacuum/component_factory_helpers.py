@@ -4,7 +4,7 @@ from typing import Any
 
 from .component import PComponent, ComponentPluginSocket
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
-from .context import ComponentContext, create_component_context
+from .context import Context, create_context
 
 
 class WrongDataTypeError(Exception):
@@ -48,7 +48,7 @@ class Inline(Enum):
     SINGLE = 'single'
 
 
-def create_component(context: ComponentContext, data: dict) -> PComponent:
+def create_component(context: Context, data: dict) -> PComponent:
     """Helper function to create a child component."""
     if not isinstance(data, dict):
         raise WrongDataTypeError("dict", type(data))
@@ -56,7 +56,7 @@ def create_component(context: ComponentContext, data: dict) -> PComponent:
         raise TooManyChildComponents(list(data.keys()))
     keyword = list(data.keys())[0]
     factory = get_component_factory(keyword)
-    child_context = create_component_context(parent=context)
+    child_context = create_context(parent=context)
     component = factory(child_context, data[keyword])
     return component
 
@@ -83,7 +83,7 @@ def _parse_string_dict(data: Any) -> Any:
     return data
 
 
-def create_children(context: ComponentContext, data: list[dict]) -> list[PComponent]:
+def create_children(context: Context, data: list[dict]) -> list[PComponent]:
     if not isinstance(data, list):
         raise WrongDataTypeError("list", type(data))
     children: list[PComponent] = []
@@ -122,7 +122,7 @@ def component_factory(inline: list[Inline] = None, children: bool = False, child
     """Decorator that create the concrete component from the returned data"""
 
     def decorator(function):
-        def wrapper(context: ComponentContext, data: Any, *args, **kwargs) -> PComponent:
+        def wrapper(context: Context, data: Any, *args, **kwargs) -> PComponent:
             _check_data_type(data)
             if inline:
                 data = _process_inline(inline, data)

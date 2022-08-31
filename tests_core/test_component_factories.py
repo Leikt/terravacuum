@@ -3,7 +3,7 @@ import unittest
 from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
 from terravacuum import PluginLoader, get_component_factory, \
     WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, TooManyChildComponents, \
-    WrongInlineArgument, create_component_context
+    WrongInlineArgument, create_context
 
 
 class TestComponentFactories(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestComponentFactories(unittest.TestCase):
 
     def test_mock_factory(self):
         factory = get_component_factory('mock')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, {'first_name': 'Leikt', 'name': 'SolReihin'})
         self.assertIsInstance(component, MockComponent)
         self.assertEqual('Leikt', component.first_name)
@@ -21,7 +21,7 @@ class TestComponentFactories(unittest.TestCase):
 
     def test_mock_raises(self):
         factory = get_component_factory('mock')
-        context = create_component_context()
+        context = create_context()
         with self.assertRaises(WrongArgumentForComponentConstructor):
             factory(context, [])
             factory(context, "")
@@ -36,7 +36,7 @@ class TestComponentFactories(unittest.TestCase):
             'mock_child': {'name': 'A', 'first_name': 'AA'}
         }
         factory = get_component_factory('mocks')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, data)
         self.assertIsInstance(component, MockParentComponent)
         self.assertEqual(data['destination'], component.destination)
@@ -50,7 +50,7 @@ class TestComponentFactories(unittest.TestCase):
             'mock_child': {'name': 'A'}
         }
         factory = get_component_factory('mocks')
-        context = create_component_context()
+        context = create_context()
         with self.assertRaises(WrongArgumentForComponentConstructor):
             factory(context, data)
             factory(context, None)
@@ -65,7 +65,7 @@ class TestComponentFactories(unittest.TestCase):
             ]
         }
         factory = get_component_factory('mock_auto_children')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, data)
         self.assertIsInstance(component, MockWithChildrenComponent)
         self.assertEqual(2, len(component.children))
@@ -73,7 +73,7 @@ class TestComponentFactories(unittest.TestCase):
 
     def test_auto_children_raises(self):
         factory = get_component_factory('mock_auto_children')
-        context = create_component_context()
+        context = create_context()
         with self.assertRaises(WrongDataTypeError):
             factory(context, None)
             factory(context, {'children': 'wrong_type'})
@@ -88,7 +88,7 @@ class TestComponentFactories(unittest.TestCase):
 
     def test_inline_dict(self):
         factory = get_component_factory('mock_with_inline_arguments')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, 'name=MIETTAUX first_name=George')
         self.assertIsInstance(component, MockComponent)
         self.assertEqual('George', component.first_name)
@@ -96,7 +96,7 @@ class TestComponentFactories(unittest.TestCase):
 
     def test_inline_single(self):
         factory = get_component_factory('mock_with_inline_arguments')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, 'George MIETTAUX')
         self.assertIsInstance(component, MockComponent)
         self.assertEqual('George', component.first_name)
@@ -104,6 +104,6 @@ class TestComponentFactories(unittest.TestCase):
 
     def test_inline_error(self):
         factory = get_component_factory('mock_with_inline_dict')
-        context = create_component_context()
+        context = create_context()
         with self.assertRaises(WrongInlineArgument):
             factory(context, 'George MIETTAUX')

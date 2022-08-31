@@ -1,7 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, \
-    create_component_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
 from terravacuum.core_plugins.terraform_generic.components import SectionComponent, HeaderComponent
 
 
@@ -12,7 +11,7 @@ class TestSection(unittest.TestCase):
 
     def test_normal(self):
         factory = get_component_factory('section')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(
             ctx_component,
             {'header': {'keyword': 'instance', 'parameters': ['vm_name']}, 'children': [
@@ -27,7 +26,7 @@ class TestSection(unittest.TestCase):
 
     def test_renderer(self):
         factory = get_component_factory('section')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(
             ctx_component,
             {'header': {'keyword': 'instance', 'parameters': ['vm_name']}, 'children': [
@@ -42,12 +41,12 @@ class TestSection(unittest.TestCase):
 \tPB = VB
 }
 """
-        actual = renderer.render(create_rendering_context(), component)
+        actual = renderer.render(create_context(), component)
         self.assertEqual(expected, actual)
 
     def test_renderer_indent(self):
         factory = get_component_factory('section')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(
             ctx_component,
             {'header': {'keyword': 'instance', 'is_property': True}, 'children': [
@@ -66,5 +65,5 @@ class TestSection(unittest.TestCase):
 \t\tPB = VB
 \t}
 """
-        actual = renderer.render(create_rendering_context(), component)
+        actual = renderer.render(create_context(), component)
         self.assertEqual(expected, actual)

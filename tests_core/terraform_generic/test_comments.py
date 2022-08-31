@@ -1,7 +1,6 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_rendering_context, \
-    create_component_context
+from terravacuum import register_core_plugins, get_component_factory, get_renderer_class, create_context
 from terravacuum.core_plugins.terraform_generic.components import CommentComponent
 
 
@@ -12,30 +11,30 @@ class TestTGComments(unittest.TestCase):
 
     def test_normal(self):
         factory = get_component_factory('comment')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, {'comments': ['First', 'Second']})
         self.assertIsInstance(component, CommentComponent)
         self.assertEqual(['First', 'Second'], component.comments)
 
     def test_inline(self):
         factory = get_component_factory('comment')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, 'A comment')
         self.assertIsInstance(component, CommentComponent)
         self.assertEqual(['A comment'], component.comments)
 
     def test_list(self):
         factory = get_component_factory('comment')
-        context = create_component_context()
+        context = create_context()
         component = factory(context, ['First', 'Second'])
         self.assertIsInstance(component, CommentComponent)
         self.assertEqual(['First', 'Second'], component.comments)
 
     def test_renderer(self):
         factory = get_component_factory('comment')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(ctx_component, ['First', 'Second'])
-        ctx_rendering = create_rendering_context()
+        ctx_rendering = create_context()
 
         renderer_c = get_renderer_class('comment')
         renderer = renderer_c()
@@ -45,9 +44,9 @@ class TestTGComments(unittest.TestCase):
 
     def test_renderer_with_indent(self):
         factory = get_component_factory('comment')
-        ctx_component = create_component_context()
+        ctx_component = create_context()
         component = factory(ctx_component, ['First', 'Second'])
-        ctx_rendering = create_rendering_context()
+        ctx_rendering = create_context()
 
         renderer_c = get_renderer_class('comment')
         renderer = renderer_c(1)

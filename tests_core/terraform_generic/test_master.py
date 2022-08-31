@@ -3,7 +3,7 @@ import shutil
 import unittest
 
 from terravacuum import register_core_plugins, load_file, create_component, get_renderer_class, \
-    create_component_context, create_rendering_context, change_working_directory
+    create_context, change_working_directory
 
 
 class TestMaster(unittest.TestCase):
@@ -18,8 +18,8 @@ class TestMaster(unittest.TestCase):
         data = load_file('data_tests/master/data.json')
         variables = load_file('data_tests/master/variables.json')
 
-        ctx_rendering = create_rendering_context(data=data, variables=variables)
-        ctx_component = create_component_context()
+        ctx_rendering = create_context(data=data, variables=variables)
+        ctx_component = create_context()
         return template, ctx_rendering, ctx_component
 
     def test_master_components(self):

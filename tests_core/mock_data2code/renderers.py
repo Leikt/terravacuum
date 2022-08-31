@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 from mock_data2code.components import FunctionHeaderComponent, CodeLineComponent, FunctionComponent
-from terravacuum import RendererRegistration, RenderingContext, PComponent, parse_expression, get_renderer_class, \
+from terravacuum import RendererRegistration, Context, PComponent, parse_expression, get_renderer_class, \
     RendererFactoryRegistration
 
 
@@ -29,14 +29,14 @@ CodeRendererClass = Callable[[int], CodeRenderer]
 
 
 class FunctionHeaderRenderer(CodeRenderer):
-    def render(self, context: RenderingContext, component: PComponent) -> str:
+    def render(self, context: Context, component: PComponent) -> str:
         component: FunctionHeaderComponent
         name = parse_expression(component.name, context)
         return "{}function {}() {}".format(tab(self.indent), name, '{')
 
 
 class CodeLineRenderer(CodeRenderer):
-    def render(self, context: RenderingContext, component: PComponent) -> str:
+    def render(self, context: Context, component: PComponent) -> str:
         component: CodeLineComponent
         lines = []
         for code_line in component.code:
@@ -46,7 +46,7 @@ class CodeLineRenderer(CodeRenderer):
 
 
 class FunctionRenderer(CodeRenderer):
-    def render(self, context: RenderingContext, component: PComponent) -> str:
+    def render(self, context: Context, component: PComponent) -> str:
         component: FunctionComponent
         header = self.render_header(context, component.header)
 
@@ -56,12 +56,12 @@ class FunctionRenderer(CodeRenderer):
         lines.append('{}{}'.format(tab(self.indent), '}'))
         return "\n".join(lines)
 
-    def render_header(self, context: RenderingContext, header_component: FunctionHeaderComponent) -> str:
+    def render_header(self, context: Context, header_component: FunctionHeaderComponent) -> str:
         header_renderer_c = get_renderer_class(header_component.get_renderer_name())  # type: ignore
         header_renderer = header_renderer_c(self.indent)
         return header_renderer.render(context, header_component)
 
-    def render_line(self, context: RenderingContext, line_component: CodeLineComponent) -> str:
+    def render_line(self, context: Context, line_component: CodeLineComponent) -> str:
         line_renderer_c = get_renderer_class(line_component.get_renderer_name())
         line_renderer = line_renderer_c(self.indent + 1)
         return line_renderer.render(context, line_component)

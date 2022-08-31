@@ -1,7 +1,7 @@
 from typing import Union
 
 from terravacuum import ComponentFactoryRegistration, component_factory, Inline, ComponentFactoryReturn, \
-    get_component_factory, load_file, create_children, ComponentContext
+    get_component_factory, load_file, create_children, Context
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
@@ -19,7 +19,7 @@ def register_component_factories() -> ComponentFactoryRegistration:
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_comment(_context: ComponentContext, data: Union[list, str, dict]) -> ComponentFactoryReturn:
+def factory_comment(_context: Context, data: Union[list, str, dict]) -> ComponentFactoryReturn:
     if isinstance(data, list):
         data = {'comments': data}
     if isinstance(data, str):
@@ -28,38 +28,38 @@ def factory_comment(_context: ComponentContext, data: Union[list, str, dict]) ->
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_blank_lines(_context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
+def factory_blank_lines(_context: Context, data: Union[dict, str]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'count': int(data)}
     return 'blank_lines', data
 
 
 @component_factory(inline=[Inline.DICT])
-def factory_property(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_property(_context: Context, data: dict) -> ComponentFactoryReturn:
     return 'property', data
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_header(_context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
+def factory_header(_context: Context, data: Union[dict, str]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'keyword': data}
     return 'header', data
 
 
 @component_factory(children=True)
-def factory_section(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_section(context: Context, data: dict) -> ComponentFactoryReturn:
     header_factory = get_component_factory('header')
     data['header'] = header_factory(context, data['header'])
     return 'section', data
 
 
 @component_factory(children=True)
-def factory_loop(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_loop(_context: Context, data: dict) -> ComponentFactoryReturn:
     return 'loop', data
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_include(context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
+def factory_include(context: Context, data: Union[dict, str]) -> ComponentFactoryReturn:
     source = data['source'] if isinstance(data, dict) else data
     children_data = load_file(source)
     if not isinstance(children_data, list):
@@ -70,10 +70,10 @@ def factory_include(context: ComponentContext, data: Union[dict, str]) -> Compon
 
 
 @component_factory(children=True)
-def factory_file(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_file(_context: Context, data: dict) -> ComponentFactoryReturn:
     return 'file', data
 
 
 @component_factory(children=True)
-def factory_project(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_project(_context: Context, data: dict) -> ComponentFactoryReturn:
     return 'project', data
