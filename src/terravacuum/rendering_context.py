@@ -11,8 +11,8 @@ class RenderingContext:
 
 
 def create_rendering_context(*_args, **kwargs) -> RenderingContext:
-    if kwargs.get('parent') is not None:
-        parent = kwargs.get('parent')
+    parent: RenderingContext = kwargs.get('parent')
+    if parent is not None:
         del kwargs['parent']
         kwargs['data'] = kwargs.get('data', parent.data)
         kwargs['variables'] = kwargs.get('variables', parent.variables)
