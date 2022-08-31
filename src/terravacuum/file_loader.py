@@ -58,7 +58,8 @@ def save_to_file(filename: str, data: Any) -> bool:
 
 
 @contextmanager
-def change_working_directory(path: str, create: bool = True):
+def change_working_directory(path: str):
+    """Execute code within another working directory."""
     old_dir = os.getcwd()
     os.makedirs(path, exist_ok=True)
     os.chdir(path)
@@ -69,6 +70,7 @@ def change_working_directory(path: str, create: bool = True):
 
 
 def create_dir(filename: str):
+    """Create directory if doesn't exist."""
     basedir = os.path.dirname(filename)
     if basedir == '':
         return

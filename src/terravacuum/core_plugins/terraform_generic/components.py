@@ -5,6 +5,7 @@ from terravacuum import ComponentRegistration, PComponent
 
 
 def register_components() -> ComponentRegistration:
+    """Function called by the plugin loader to register the components."""
     yield 'project', ProjectComponent
     # yield 'module', ModuleComponent
     yield 'file', FileComponent

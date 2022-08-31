@@ -18,7 +18,7 @@ class TestMaster(unittest.TestCase):
         data = load_file('data_tests/master/data.json')
         variables = load_file('data_tests/master/variables.json')
 
-        ctx_rendering = create_rendering_context(data=data, variables=variables, working_directory='data_tests/')
+        ctx_rendering = create_rendering_context(data=data, variables=variables)
         ctx_component = create_component_context()
         return template, ctx_rendering, ctx_component
 

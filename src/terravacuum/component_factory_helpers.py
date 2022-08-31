@@ -43,9 +43,9 @@ class WrongInlineArgument(Exception):
 
 
 class Inline(Enum):
+    """Accepted inline argument types."""
     DICT = 'dict'
     SINGLE = 'single'
-    LIST = 'list'
 
 
 def create_component(context: ComponentContext, data: dict) -> PComponent:
@@ -93,6 +93,7 @@ def create_children(context: ComponentContext, data: list[dict]) -> list[PCompon
 
 
 def _process_inline(inline: list[Inline], data) -> Any:
+    """Process an inline string argument into usable data."""
     if not isinstance(data, str):
         return data
 
@@ -101,9 +102,6 @@ def _process_inline(inline: list[Inline], data) -> Any:
         if parsed_dict is not None:
             return parsed_dict
 
-    if Inline.LIST in inline:
-        pass
-
     if Inline.SINGLE in inline:
         return data
 
@@ -111,6 +109,7 @@ def _process_inline(inline: list[Inline], data) -> Any:
 
 
 def _check_data_type(data, accepted: list[type] = None):
+    """Check if the type of data is accepted. Raise a WrongDataTypeError if it isn't."""
     if accepted is None:
         accepted = [dict, list, str]
     for typ in accepted:

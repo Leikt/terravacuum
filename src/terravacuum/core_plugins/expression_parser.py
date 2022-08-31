@@ -1,12 +1,13 @@
 import re
 from typing import Optional, Any
 
-from terravacuum import PExpressionParser, RenderingContext, ExpressionParsingResult
-
 from jsonpath_ng.ext import parse as parse_jsonpath
+
+from terravacuum import PExpressionParser, RenderingContext, ExpressionParsingResult
 
 
 def register_expression_parsers() -> PExpressionParser:
+    """Function called by the plugin loader to register the expression parsers."""
     yield CoreExpressionParer
 
 

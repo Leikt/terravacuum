@@ -1,7 +1,5 @@
 # Import standalone modules
 from .plugin_system import PluginLoader, PPluginSocket, register_plugin_socket, plugin_registerer
-# from .rendering_context import RenderingContext, create_rendering_context
-# from .component_context import ComponentContext, create_component_context
 from .context import RenderingContext, ComponentContext, create_rendering_context, create_component_context, Context
 from .core_plugins import register_core_plugins
 
@@ -22,5 +20,3 @@ from .renderer import PRenderer, RendererNotFound, get_renderer_class, RendererR
 from .renderer_factory import get_renderer_factory, RendererFactoryNotFound, RendererFactory, \
     RendererFactoryRegistration, RendererFactoryReturn, WrongArgumentForRendererConstructor
 from .renderer_helpers import tab, render_components
-
-# Import path tools

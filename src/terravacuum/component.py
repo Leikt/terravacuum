@@ -21,6 +21,7 @@ class PComponent(Protocol):
 
 
 ComponentRegistration = tuple[str, type]
+"""Return type for the register_components method."""
 
 
 @register_plugin_socket

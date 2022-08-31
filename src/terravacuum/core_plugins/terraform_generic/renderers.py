@@ -8,6 +8,7 @@ from .components import BlankLinesComponent, CommentComponent, PropertyComponent
 
 
 def register_renderers() -> RendererRegistration:
+    """Function called by the plugin loader to register the renderers."""
     yield 'comment', CommentRenderer
     yield 'blank_lines', BlankLinesRenderer
     yield 'property', PropertyRenderer
@@ -94,7 +95,7 @@ class SectionRenderer(CodeRenderer):
 
         content = [
             header.render(context, component.header),
-            render_components(context, component.children, self.indentation + 1),
+            ''.join(render_components(context, component.children, self.indentation + 1)),
             self.indent + "}\n"
         ]
         return ''.join(content)
@@ -118,7 +119,7 @@ class LoopRenderer(CodeRenderer):
         content = []
         for d in data:
             child_context = create_rendering_context(parent=context, data=d)
-            content.append(render_components(child_context, component.children, self.indentation))
+            content.append(''.join(render_components(child_context, component.children, self.indentation)))
         return ''.join(content)
 
 
@@ -127,7 +128,7 @@ class ContainerRenderer(CodeRenderer):
 
     def render(self, context: RenderingContext, component: PComponent) -> str:
         component: ContainerComponent
-        return render_components(context, component.children, self.indentation)
+        return ''.join(render_components(context, component.children, self.indentation))
 
 
 class FileRenderer(CodeRenderer):
@@ -136,7 +137,7 @@ class FileRenderer(CodeRenderer):
     def render(self, context: RenderingContext, component: PComponent) -> str:
         component: FileComponent
         destination = parse_expression(component.destination, context)
-        result = render_components(context, component.children, self.indentation)
+        result = ''.join(render_components(context, component.children, self.indentation))
         save_to_file(destination, result)
         return ''
 

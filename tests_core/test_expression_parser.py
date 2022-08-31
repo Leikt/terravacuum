@@ -1,7 +1,6 @@
 import unittest
 
-from terravacuum import PluginLoader, parse_expression
-from terravacuum import create_rendering_context
+from terravacuum import PluginLoader, parse_expression, create_rendering_context
 
 
 class TestExpressionParser(unittest.TestCase):

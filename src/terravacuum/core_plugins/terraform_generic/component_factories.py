@@ -5,6 +5,7 @@ from terravacuum import ComponentFactoryRegistration, component_factory, Inline,
 
 
 def register_component_factories() -> ComponentFactoryRegistration:
+    """Function called by the plugin loader to register the factories."""
     yield 'project', factory_project
     # yield 'module', factory_module
     yield 'file', factory_file
@@ -18,7 +19,7 @@ def register_component_factories() -> ComponentFactoryRegistration:
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_comment(context: ComponentContext, data: Union[list, str, dict]) -> ComponentFactoryReturn:
+def factory_comment(_context: ComponentContext, data: Union[list, str, dict]) -> ComponentFactoryReturn:
     if isinstance(data, list):
         data = {'comments': data}
     if isinstance(data, str):
@@ -27,19 +28,19 @@ def factory_comment(context: ComponentContext, data: Union[list, str, dict]) -> 
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_blank_lines(context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
+def factory_blank_lines(_context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'count': int(data)}
     return 'blank_lines', data
 
 
 @component_factory(inline=[Inline.DICT])
-def factory_property(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_property(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
     return 'property', data
 
 
 @component_factory(inline=[Inline.SINGLE])
-def factory_header(context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
+def factory_header(_context: ComponentContext, data: Union[dict, str]) -> ComponentFactoryReturn:
     if isinstance(data, str):
         data = {'keyword': data}
     return 'header', data
@@ -53,7 +54,7 @@ def factory_section(context: ComponentContext, data: dict) -> ComponentFactoryRe
 
 
 @component_factory(children=True)
-def factory_loop(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_loop(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
     return 'loop', data
 
 
@@ -69,10 +70,10 @@ def factory_include(context: ComponentContext, data: Union[dict, str]) -> Compon
 
 
 @component_factory(children=True)
-def factory_file(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_file(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
     return 'file', data
 
 
 @component_factory(children=True)
-def factory_project(context: ComponentContext, data: dict) -> ComponentFactoryReturn:
+def factory_project(_context: ComponentContext, data: dict) -> ComponentFactoryReturn:
     return 'project', data

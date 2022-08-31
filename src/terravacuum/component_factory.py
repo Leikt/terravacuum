@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Callable, Union
 
-from . import ComponentContext
+from .context import ComponentContext
 from .plugin_system import register_plugin_socket, plugin_registerer
 from .component import PComponent
 

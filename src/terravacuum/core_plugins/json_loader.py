@@ -7,6 +7,7 @@ EXTENSION = '.json'
 
 
 def register_file_loaders() -> PFileLoader:
+    """Function called by the plugin loader to register the file loaders."""
     yield JsonFileLoader
 
 

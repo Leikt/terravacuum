@@ -1,11 +1,14 @@
-import yaml
 from typing import Optional, Any
+
+import yaml
 
 from terravacuum import PFileLoader
 
 EXTENSION = '.yml'
 
+
 def register_file_loaders() -> PFileLoader:
+    """Function called by the plugin loader to register the file loaders."""
     yield YamlFileLoader
 
 

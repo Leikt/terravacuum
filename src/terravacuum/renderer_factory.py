@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Callable, Any
 
-from . import PRenderer
+from .renderer import PRenderer
 from .plugin_system import register_plugin_socket, plugin_registerer
 
 
