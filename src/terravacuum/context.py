@@ -24,7 +24,7 @@ def create_component_context(*_args, **kwargs) -> ComponentContext:
     if parent is not None:
         del kwargs['parent']
         kwargs['working_directory'] = kwargs.get('working_directory', parent.working_directory)
-        kwargs['others'] = kwargs.get('others', parent.others)
+        kwargs['others'] = kwargs.get('others', parent.others.copy())
 
     return ComponentContext(**kwargs)
 
@@ -43,6 +43,6 @@ def create_rendering_context(*_args, **kwargs) -> RenderingContext:
         kwargs['data'] = kwargs.get('data', parent.data)
         kwargs['variables'] = kwargs.get('variables', parent.variables)
         kwargs['working_directory'] = kwargs.get('working_directory', parent.working_directory)
-        kwargs['others'] = kwargs.get('others', parent.others)
+        kwargs['others'] = kwargs.get('others', parent.others.copy())
 
     return RenderingContext(**kwargs)

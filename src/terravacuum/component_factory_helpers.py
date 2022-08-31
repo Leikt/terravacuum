@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from typing import Any
 
-from .context import ComponentContext
+from .context import ComponentContext, create_component_context
 from .component import PComponent, ComponentPluginSocket
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
 
@@ -56,7 +56,8 @@ def create_component(context: ComponentContext, data: dict) -> PComponent:
         raise TooManyChildComponents(list(data.keys()))
     keyword = list(data.keys())[0]
     factory = get_component_factory(keyword)
-    return factory(context, data[keyword])
+    child_context = create_component_context(parent=context)
+    return factory(child_context, data[keyword])
 
 
 def _create_component(keyword: str, data: dict) -> PComponent:
