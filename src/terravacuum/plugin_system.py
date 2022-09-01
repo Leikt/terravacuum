@@ -55,6 +55,9 @@ class PluginLoader:
     @classmethod
     def register_plugin_socket(cls, name: str, register_method: str, exception: type = PluginItemNotFoundError):
         """Add the object to the list of objects that can register plugins."""
+        if name in cls.__sockets:
+            logging.warning(f'A socket is already registered under "{name}"')
+            return
         cls.__sockets[name] = PluginSocket(name, register_method, exception)
         logging.debug('Plugin socket {} registered.'.format(name))
 
