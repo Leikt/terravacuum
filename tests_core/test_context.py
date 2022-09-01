@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import create_context, Context, register_core_plugins, parse_expression
+from terravacuum import create_context, Context, register_core_plugins, parse_expression, FrozenContextError
 from terravacuum.core_plugins.expression_parser import MissingContextKeyError
 
 
@@ -26,3 +26,12 @@ class TestContext(unittest.TestCase):
         context = create_context()
         with self.assertRaises(MissingContextKeyError):
             parse_expression('$.do_not_exists', context)
+
+    def test_modification_forbidden(self):
+        context = create_context(some='thing', nest={'data': 12})
+        self.assertEqual('thing', context['some'])
+        self.assertEqual(12, context['nest']['data'])
+        with self.assertRaises(FrozenContextError):
+            context['some'] = 12
+        # with self.assertRaises(FrozenContextError):
+        #     context['nest']['data'] = 13

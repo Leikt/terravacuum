@@ -37,7 +37,7 @@ Name = "D.CORP - C"
         actual = renderer(ctx_rendering, component)
         self.assertEqual(expected, actual)
 
-        ctx_rendering['indentation'] = 2
+        ctx_rendering = create_context(parent=ctx_rendering, indentation=2)
         expected = """\t\tName = "D.CORP - A"
 \t\tName = "D.CORP - B"
 \t\tName = "D.CORP - C"

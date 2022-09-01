@@ -37,5 +37,5 @@ class TestHeader(unittest.TestCase):
         self.assertEqual("instance {\n", renderer(ctx_rendering, component))
 
         component = factory(ctx_component, {'keyword': 'instance', 'parameters': ['vm_name'], 'is_property': True})
-        ctx_rendering['indentation'] = 1
+        ctx_rendering = create_context(parent=ctx_component, indentation=1)
         self.assertEqual("\tinstance \"vm_name\" = {\n", renderer(ctx_rendering, component))
