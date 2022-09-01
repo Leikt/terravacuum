@@ -53,5 +53,5 @@ class TestMockData2Code(unittest.TestCase):
 
         function_renderer = get_renderer('m2d-function')
 
-        actual = function_renderer(ctx_rendering, component)
+        actual = function_renderer(ctx_rendering, component) # type: ignore
         self.assertEqual(EXPECTED, actual)

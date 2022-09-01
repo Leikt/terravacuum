@@ -46,23 +46,17 @@ def factory_function(context: Context, data: dict):
 @dataclass
 class FunctionHeaderComponent:
     name: str
-
-    def get_renderer_name(self) -> str:
-        return 'm2d-header'
+    renderer: str = 'm2d-header'
 
 
 @dataclass
 class CodeLineComponent:
     code: list[str]
-
-    def get_renderer_name(self) -> str:
-        return 'm2d-line'
+    renderer: str = 'm2d-line'
 
 
 @dataclass
 class FunctionComponent:
     header: FunctionHeaderComponent
     lines: list[CodeLineComponent]
-
-    def get_renderer_name(self) -> str:
-        return 'm2d-function'
+    renderer: str = 'm2d-function'

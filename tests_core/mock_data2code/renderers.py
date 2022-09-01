@@ -29,13 +29,13 @@ def render_code_line(context: Context, component: PComponent) -> str:
 
 def render_function(context: Context, component: PComponent) -> str:
     component: FunctionComponent
-    header_renderer = get_renderer('m2d-header')
-    line_renderer = get_renderer('m2d-line')
+    header_renderer = get_renderer(component.header.renderer)
 
-    header = header_renderer(context, component.header)
+    header = header_renderer(context, component.header)  # type: ignore
     line_context = create_context(context, indentation=context.get('indentation', 0) + 1)
     lines = [header]
     for line_component in component.lines:
-        lines.append(line_renderer(line_context, line_component))
+        line_renderer = get_renderer(line_component.renderer)
+        lines.append(line_renderer(line_context, line_component))  # type: ignore
     lines.append('{}{}'.format(tab(context), '}'))
     return "\n".join(lines)
