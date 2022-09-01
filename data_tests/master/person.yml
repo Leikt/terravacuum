@@ -1,0 +1,8 @@
+file:
+  destination: "persons/{{$.first_name}}_{{$.last_name}}.tf"
+  children:
+    - section:
+        header: person
+        children:
+          - property: "name=LastName value={{$.last_name}}"
+          - property: "name=FirstName value={{$.first_name}}"

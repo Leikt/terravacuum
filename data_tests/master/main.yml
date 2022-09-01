@@ -1,0 +1,14 @@
+project:
+  directory: "master_render/"
+  children:
+    - loop:
+        through: $.persons
+        children:
+          - include: person.yml
+    - file:
+        destination: main.tf
+        children:
+          - section:
+              header: main
+              children:
+                - property: name=author value="Robin LIORET"
