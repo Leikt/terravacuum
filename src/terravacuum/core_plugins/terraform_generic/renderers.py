@@ -68,7 +68,7 @@ def render_header(context: Context, component: PComponent) -> str:
 
 def render_section(context: Context, component: PComponent) -> str:
     component: SectionComponent
-    header_renderer = get_renderer(component.header.get_renderer_name())
+    header_renderer = get_renderer(component.header.renderer)
 
     children_context = create_context(context, indentation=context.get('indentation', 0) + 1)
     content = [

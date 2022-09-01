@@ -1,4 +1,5 @@
 import logging
+from dataclasses import dataclass
 from typing import Protocol
 
 from .plugin_system import register_plugin_socket, plugin_registerer
@@ -13,11 +14,10 @@ class ComponentNotFound(Exception):
         super().__init__(self.message)
 
 
+@dataclass
 class PComponent(Protocol):
     """A component of the template, it is able to process data to a renderer"""
-
-    def get_renderer_name(self) -> str:
-        """Return the name of the component's renderer."""
+    renderer: str
 
 
 ComponentRegistration = tuple[str, type]

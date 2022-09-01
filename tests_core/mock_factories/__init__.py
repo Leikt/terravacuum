@@ -57,23 +57,17 @@ def fabric_mock_with_inline_dict(_context: Context, data: dict):
 class MockComponent:
     name: str
     first_name: str
-
-    def get_renderer_name(self) -> str:
-        return 'mock'
+    renderer: str = 'mock'
 
 
 @dataclass
 class MockParentComponent:
     destination: str
     child: PComponent
-
-    def get_renderer_name(self) -> str:
-        return 'mock_parent'
+    renderer: str = 'mock_parent'
 
 
 @dataclass
 class MockWithChildrenComponent:
     children: list[PComponent]
-
-    def get_renderer_name(self) -> str:
-        return 'mock_with_children'
+    renderer: str = 'mock_with_children'

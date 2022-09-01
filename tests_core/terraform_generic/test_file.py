@@ -28,7 +28,7 @@ class TestFile(unittest.TestCase):
             ctx_component,
             {'destination': 'data_tests/created_file.tf', 'children': [{'property': 'name=Name value=Test'}]})
         self.assertIsInstance(component, FileComponent)
-        renderer = get_renderer(component.get_renderer_name())
+        renderer = get_renderer(component.renderer)
         ctx_rendering = create_context()
 
         actual = renderer(ctx_rendering, component)  # type: ignore

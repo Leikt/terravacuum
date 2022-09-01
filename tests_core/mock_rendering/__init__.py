@@ -24,7 +24,7 @@ def render_mock_with_expr(context: Context, component: PComponent) -> str:
 def render_mock_parent(context: Context, component: PComponent) -> str:
     component: MockParentComponent
     destination = parse_expression(component.destination, context)
-    child_renderer = get_renderer(component.child.get_renderer_name())
+    child_renderer = get_renderer(component.child.renderer)
     child_render = child_renderer(context, component.child)
     return "\n".join([
         "mock_parent '{}' ".format(destination) + "{",

@@ -33,7 +33,7 @@ class TestMaster(unittest.TestCase):
         with change_working_directory('data_tests/master/'):
             component = create_component(ctx_component, template)
 
-        renderer = get_renderer(component.get_renderer_name())
+        renderer = get_renderer(component.renderer)
         with change_working_directory('data_tests/'):
             renderer(ctx_rendering, component)
 

@@ -32,7 +32,7 @@ class TestProject(unittest.TestCase):
         self.assertIsInstance(component, ProjectComponent)
         ctx_rendering = create_context()
 
-        renderer = get_renderer(component.get_renderer_name())
+        renderer = get_renderer(component.renderer)
 
         expected = ''
         actual = renderer(ctx_rendering, component)
