@@ -7,9 +7,9 @@ from terravacuum import PFileLoader
 EXTENSION = '.yml'
 
 
-def register_file_loaders() -> PFileLoader:
+def register_file_loaders() -> tuple[str, PFileLoader]:
     """Function called by the plugin loader to register the file loaders."""
-    yield YamlFileLoader
+    yield 'yml', YamlFileLoader
 
 
 class YamlFileLoader:

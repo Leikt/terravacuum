@@ -2,13 +2,15 @@ import os.path
 import shutil
 import unittest
 
-from terravacuum import register_core_plugins, load_file, create_component, get_renderer, \
-    create_context, change_working_directory
+from terravacuum import load_file, create_component, get_renderer, \
+    create_context, change_working_directory, register_plugin_sockets
+from terravacuum.core_plugins import register_core_plugins
 
 
 class TestMaster(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        register_plugin_sockets()
         register_core_plugins()
         if os.path.isdir('data_tests/master_render'):
             shutil.rmtree('data_tests/master_render')

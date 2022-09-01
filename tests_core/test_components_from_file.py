@@ -1,12 +1,15 @@
 import unittest
 
 from mock_factories import MockComponent
-from terravacuum import PluginLoader, load_file, create_component, create_context
+from terravacuum import PluginLoader, load_file, create_component, create_context, register_plugin_sockets
+from terravacuum.core_plugins import register_core_plugins
 
 
 class TestComponentsFromFile(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        register_plugin_sockets()
+        register_core_plugins()
         PluginLoader.load_plugin('mock_factories')
 
     def test_load_simple_component(self):

@@ -1,14 +1,16 @@
 import os.path
 import unittest
 
-from terravacuum import load_file, save_to_file, PluginLoader, change_working_directory
+from terravacuum import load_file, save_to_file, PluginLoader, change_working_directory, register_plugin_sockets
 
 
 class TestFileLoaders(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        register_plugin_sockets()
         PluginLoader.load_plugin('terravacuum.core_plugins.json_loader')
         PluginLoader.load_plugin('terravacuum.core_plugins.yaml_loader')
+        PluginLoader.load_plugin('terravacuum.core_plugins.terraform_loader')
 
     def test_load_but_no_loader(self):
         data = load_file('file.unknown_extension')

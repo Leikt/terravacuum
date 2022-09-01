@@ -1,12 +1,14 @@
 import unittest
 
-from terravacuum import register_core_plugins, get_component_factory, create_context, get_renderer
+from terravacuum import get_component_factory, create_context, get_renderer, register_plugin_sockets
+from terravacuum.core_plugins import register_core_plugins
 from terravacuum.core_plugins.terraform_generic.components import ContainerComponent
 
 
 class TestContainer(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        register_plugin_sockets()
         register_core_plugins()
 
     def test_normal(self):

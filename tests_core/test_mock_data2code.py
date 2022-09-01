@@ -1,8 +1,9 @@
 import unittest
 
 from mock_data2code.components import FunctionComponent
-from terravacuum import register_core_plugins, PluginLoader, get_renderer, get_component_factory, \
-    create_context
+from terravacuum import PluginLoader, get_renderer, get_component_factory, \
+    create_context, register_plugin_sockets
+from terravacuum.core_plugins import register_core_plugins
 
 TEMPLATE = {
     'header': '$.name',
@@ -39,6 +40,7 @@ EXPECTED = """function do_something() {
 class TestMockData2Code(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        register_plugin_sockets()
         register_core_plugins()
         PluginLoader.load_plugin('mock_data2code')
 

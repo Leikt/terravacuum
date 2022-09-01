@@ -16,9 +16,9 @@ class MissingContextKeyError(Exception):
         super().__init__(self.message)
 
 
-def register_expression_parsers() -> PExpressionParser:
+def register_expression_parsers() -> tuple[str, PExpressionParser]:
     """Function called by the plugin loader to register the expression parsers."""
-    yield CoreExpressionParer
+    yield 'terravacuum-core', CoreExpressionParer
 
 
 class CoreExpressionParer:

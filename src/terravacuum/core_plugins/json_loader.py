@@ -6,9 +6,9 @@ from terravacuum import PFileLoader
 EXTENSION = '.json'
 
 
-def register_file_loaders() -> PFileLoader:
+def register_file_loaders() -> tuple[str, PFileLoader]:
     """Function called by the plugin loader to register the file loaders."""
-    yield JsonFileLoader
+    yield 'json', JsonFileLoader
 
 
 class JsonFileLoader:

@@ -1,7 +1,6 @@
 # Import standalone modules
-from .plugin_system import PluginLoader, PPluginSocket, register_plugin_socket, plugin_registerer
+from .plugin_system import PluginLoader, PluginSocket, PluginItemNotFoundError
 from .context import create_context, Context, FrozenContextError
-from .core_plugins import register_core_plugins
 
 # Import modules with plugin sockets
 from .file_loader import PFileLoader, load_file, save_to_file, change_working_directory
@@ -18,3 +17,12 @@ from .component_factory_helpers import component_factory, WrongDataTypeError, Mi
 # Import renderers
 from .renderer import Renderer, RendererNotFound, get_renderer, RendererRegistration
 from .renderer_helpers import render_components
+
+
+def register_plugin_sockets():
+    PluginLoader.register_plugin_socket('component', 'register_components', ComponentNotFound)
+    PluginLoader.register_plugin_socket('component_factory', 'register_component_factories', ComponentFactoryNotFound)
+    PluginLoader.register_plugin_socket('renderer', 'register_renderers', RendererNotFound)
+    PluginLoader.register_plugin_socket('file_loader', 'register_file_loaders')
+    PluginLoader.register_plugin_socket('expression_parser', 'register_expression_parsers')
+    PluginLoader.register_plugin_socket('data_collector', 'register_data_collectors', DataCollectorNotFoundError)

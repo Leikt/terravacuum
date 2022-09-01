@@ -3,12 +3,13 @@ import unittest
 from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
 from terravacuum import PluginLoader, get_component_factory, \
     WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, TooManyChildComponents, \
-    WrongInlineArgument, create_context
+    WrongInlineArgument, create_context, register_plugin_sockets, ComponentNotFound, get_component_class
 
 
 class TestComponentFactories(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        register_plugin_sockets()
         PluginLoader.load_plugin('mock_factories')
 
     def test_mock_factory(self):
@@ -29,6 +30,10 @@ class TestComponentFactories(unittest.TestCase):
     def test_factory_not_found(self):
         with self.assertRaises(ComponentFactoryNotFound):
             get_component_factory('not_registered')
+
+    def test_component_not_found(self):
+        with self.assertRaises(ComponentNotFound):
+            get_component_class('not_found')
 
     def test_parent_factory(self):
         data = {

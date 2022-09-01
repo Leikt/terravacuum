@@ -2,7 +2,7 @@ import logging
 from enum import Enum
 from typing import Protocol, Any, Optional
 
-from .plugin_system import register_plugin_socket, plugin_registerer
+from .plugin_system import PluginLoader
 from .context import Context
 
 
@@ -20,31 +20,12 @@ class PExpressionParser(Protocol):
         """Parse the expression and return the data."""
 
 
-@register_plugin_socket
-class ExpressionParserPluginSocket:
-    """Plugin socket for the expression parsers."""
-
-    __plugins: list[PExpressionParser] = []
-
-    @classmethod
-    @plugin_registerer('register_expression_parsers')
-    def register(cls, plugin):
-        if plugin in cls.__plugins:
-            return
-
-        cls.__plugins.append(plugin)
-
-    @classmethod
-    def get_plugins(cls) -> list[PExpressionParser]:
-        return cls.__plugins
-
-
 def parse_expression(expr: str, context: Context, quote_string_with_spaces: bool = False) -> Optional[Any]:
     """Parse the given expression in the context.
     If no parser is able to parse the expression, it is return unchanged."""
     result = expr
-    for plugin in ExpressionParserPluginSocket.get_plugins():
-        code, result = plugin.parse(expr, context)
+    for _, parser in PluginLoader.get('expression_parser'):
+        code, result = parser.parse(expr, context)
         if code == ExpressionParsingResult.FAILURE:
             logging.error('Unable to parse the expression "{}"'.format(expr))
 

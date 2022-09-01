@@ -1,6 +1,7 @@
 import unittest
 
-from terravacuum import create_context, Context, register_core_plugins, parse_expression, FrozenContextError
+from terravacuum import create_context, Context, parse_expression, FrozenContextError
+from terravacuum.core_plugins import register_core_plugins
 from terravacuum.core_plugins.expression_parser import MissingContextKeyError
 
 

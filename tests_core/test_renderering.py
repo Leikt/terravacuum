@@ -1,16 +1,22 @@
 import unittest
 
 from mock_factories import MockComponent, MockParentComponent
-from terravacuum import PluginLoader, get_component_factory, get_renderer, register_core_plugins, \
-    create_context
+from terravacuum import PluginLoader, get_component_factory, get_renderer, \
+    create_context, register_plugin_sockets, RendererNotFound
+from terravacuum.core_plugins import register_core_plugins
 
 
 class TestRendering(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        register_plugin_sockets()
         register_core_plugins()
         PluginLoader.load_plugin('mock_factories')
         PluginLoader.load_plugin('mock_rendering')
+
+    def test_not_found(self):
+        with self.assertRaises(RendererNotFound):
+            get_renderer('not_found')
 
     def test_simple_rendering(self):
         ctx_rendering = create_context()

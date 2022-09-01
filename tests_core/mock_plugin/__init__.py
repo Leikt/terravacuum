@@ -1,27 +1,22 @@
 from dataclasses import dataclass
 
+from terravacuum import PluginLoader, PluginItemNotFoundError
+
 
 @dataclass
 class Mock:
     value: int = 0
 
 
-def register_mock() -> Mock:
-    yield Mock(12)
-    yield Mock(52)
-    yield Mock(366)
+class MockNotFoundError(PluginItemNotFoundError):
+    pass
 
 
-class MockSocket:
-    __plugins: list[Mock] = []
+def register_plugin_sockets():
+    PluginLoader.register_plugin_socket('mock_socket', 'register_mock', MockNotFoundError)
 
-    @classmethod
-    def register(cls, module):
-        if not hasattr(module, 'register_mock'):
-            return
-        for mock in module.register_mock():
-            cls.__plugins.append(mock)
 
-    @classmethod
-    def each(cls):
-        return [mock.value for mock in cls.__plugins]
+def register_mock() -> tuple[str, Mock]:
+    yield '12', Mock(12)
+    yield '52', Mock(52)
+    yield '366', Mock(366)

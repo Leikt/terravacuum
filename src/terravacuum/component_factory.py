@@ -1,18 +1,12 @@
-import logging
 from typing import Optional, Callable, Union
 
-from .context import Context
-from .plugin_system import register_plugin_socket, plugin_registerer
 from .component import PComponent
+from .context import Context
+from .plugin_system import PluginLoader, PluginItemNotFoundError
 
 
-class ComponentFactoryNotFound(Exception):
+class ComponentFactoryNotFound(PluginItemNotFoundError):
     """Exception raised when a component factory is requested but not found."""
-
-    def __init__(self, keyword: str):
-        self.keyword = keyword
-        self.message = 'No component factory is registered to the keyword "{}"'.format(keyword)
-        super().__init__(self.message)
 
 
 class WrongArgumentForComponentConstructor(Exception):
@@ -34,30 +28,7 @@ ComponentFactoryReturn = tuple[str, dict]
 """Return type when the function uses the component_factory decorator"""
 
 
-@register_plugin_socket
-class ComponentFactoryPluginSocket:
-    """Plugin socket for the component factories."""
-
-    __factories: dict[str, ComponentFactory] = {}
-
-    @classmethod
-    @plugin_registerer('register_component_factories')
-    def register(cls, element):
-        keyword, factory = element
-        if keyword in cls.__factories:
-            logging.warning('A component factory is already registered on keyword "{}"'.format(keyword))
-            return
-
-        cls.__factories[keyword] = factory
-
-    @classmethod
-    def get_factory(cls, keyword: str) -> ComponentFactory:
-        if keyword not in cls.__factories:
-            raise ComponentFactoryNotFound(keyword)
-        return cls.__factories[keyword]
-
-
 def get_component_factory(keyword: str) -> ComponentFactory:
     """Retrieve the component factory associated with the given keyword. Raise a ComponentFactoryNotFound error if
     it's missing."""
-    return ComponentFactoryPluginSocket.get_factory(keyword)
+    return PluginLoader.get('component_factory')[keyword]

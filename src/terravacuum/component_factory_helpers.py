@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from typing import Any
 
-from .component import PComponent, ComponentPluginSocket
+from .component import PComponent, get_component_class
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
 from .context import Context, create_context
 
@@ -62,7 +62,7 @@ def create_component(context: Context, data: dict) -> PComponent:
 
 
 def _create_component(keyword: str, data: dict) -> PComponent:
-    klass = ComponentPluginSocket.get_component_class(keyword)
+    klass = get_component_class(keyword)
     try:
         component: PComponent = klass(**data)
         return component
