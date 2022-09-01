@@ -17,6 +17,4 @@ from .component_factory_helpers import component_factory, WrongDataTypeError, Mi
 
 # Import renderers
 from .renderer import Renderer, RendererNotFound, get_renderer, RendererRegistration
-# from .renderer_factory import get_renderer_factory, RendererFactoryNotFound, RendererFactory, \
-#     RendererFactoryRegistration, RendererFactoryReturn, WrongArgumentForRendererConstructor
 from .renderer_helpers import render_components
