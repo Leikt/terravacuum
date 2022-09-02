@@ -11,4 +11,4 @@ project:
           - section:
               header: main
               children:
-                - property: name=author value="Robin LIORET"
+                - property: name=author value="~.author"
