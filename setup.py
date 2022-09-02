@@ -2,16 +2,16 @@ from distutils.core import setup
 
 from increase_version import load_version_string
 
-NAME = 'PackageName'
+NAME = 'terravacuum'
 VERSION = load_version_string()
 DESCRIPTION = ''
 LONG_DESCRIPTION_FILE = 'README.md'
-AUTHOR = 'FirstName LAST_NAME'
-AUTHOR_EMAIL = 'bla@bla.com'
-URL = 'link'
-PACKAGES = ['your_package']
-PACKAGE_DIR = {'your_package': 'src/your_package'}
-PACKAGE_DATA = {'your_package': ['data/*']}
+AUTHOR = 'Leikt Sol\'Reihin'
+AUTHOR_EMAIL = 'leikt.solreihin@gmail.com'
+URL = 'https://github.com/Leikt/terravacuum'
+PACKAGES = ['terravacuum']
+PACKAGE_DIR = {'terravacuum': 'src/terravacuum'}
+PACKAGE_DATA = {}
 DATA_FILES = []
 
 with open(LONG_DESCRIPTION_FILE, 'r') as file:
