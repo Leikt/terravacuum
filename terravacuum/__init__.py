@@ -5,7 +5,6 @@ from .context import create_context, Context, FrozenContextError
 # Import modules with plugin sockets
 from .file_loader import PFileLoader, load_file, save_to_file, change_working_directory
 from .expression_parsing import PExpressionParser, parse_expression, ExpressionParsingResult
-from .data_collector import PDataCollector, DataCollectorNotFoundError, collect_data
 
 # Import component related
 from .component_factory import ComponentFactory, ComponentFactoryNotFound, PComponent, get_component_factory, \
@@ -25,4 +24,3 @@ def register_plugin_sockets():
     PluginLoader.register_plugin_socket('renderer', 'register_renderers', RendererNotFound)
     PluginLoader.register_plugin_socket('file_loader', 'register_file_loaders')
     PluginLoader.register_plugin_socket('expression_parser', 'register_expression_parsers')
-    PluginLoader.register_plugin_socket('data_collector', 'register_data_collectors', DataCollectorNotFoundError)
