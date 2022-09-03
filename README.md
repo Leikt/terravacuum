@@ -15,14 +15,17 @@ Import terravacuum inside your project:
 
 Or use only the parts you are interested in:
 
-`from terravacuum import PluginLoader, register_plugin_sockets, register_core_plugins`
+`from terravacuum.plugin_system import PluginLoader`
 
 ## Quick start
 
 Here is a basic usage of terravacuum :
 
 ```python
-from terravacuum import load_file, create_context, create_component, get_renderer
+from terravacuum.files import load_file
+from terravacuum.rendering import get_renderer
+from terravacuum.component import create_component
+from terravacuum.context import create_context
 from terravacuum.core_plugins import initialize
 
 initialize()
@@ -45,7 +48,11 @@ renderer(ctx_rendering, component)
 * Load the different needed elements
 
 ```python
-from terravacuum import load_file, create_context, create_component, get_renderer
+from terravacuum.files import load_file
+from terravacuum.rendering import get_renderer
+from terravacuum.component import create_component
+from terravacuum.context import create_context
+from terravacuum.core_plugins import initialize
 ```
 
 * Register the plugin sockets and the core plugins
@@ -121,7 +128,7 @@ component.
   manager `change_working_directory`:
 
 ```python
-from terravacuum import change_working_directory
+from terravacuum.files import change_working_directory
 
 with change_working_directory('path/to/other/location'):
     renderer(ctx_rendering, component)
