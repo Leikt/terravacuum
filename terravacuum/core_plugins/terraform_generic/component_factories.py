@@ -1,7 +1,9 @@
 from typing import Union
 
-from terravacuum import ComponentFactoryRegistration, component_factory, Inline, ComponentFactoryReturn, \
-    get_component_factory, load_file, create_children, Context
+from terravacuum.component import ComponentFactoryRegistration, component_factory, Inline, ComponentFactoryReturn, \
+    get_component_factory, create_children
+from terravacuum.context import Context
+from terravacuum.files import load_file
 
 
 def register_component_factories() -> ComponentFactoryRegistration:

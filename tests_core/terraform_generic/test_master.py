@@ -2,8 +2,11 @@ import os.path
 import shutil
 import unittest
 
-from terravacuum import load_file, create_component, get_renderer, \
-    create_context, change_working_directory, register_plugin_sockets
+from terravacuum import register_plugin_sockets
+from terravacuum.context import create_context
+from terravacuum.rendering import get_renderer
+from terravacuum.component import create_component
+from terravacuum.files import load_file, change_working_directory
 from terravacuum.core_plugins import register_core_plugins
 
 

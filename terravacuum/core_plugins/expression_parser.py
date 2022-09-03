@@ -3,7 +3,8 @@ from typing import Optional, Any
 
 from jsonpath_ng.ext import parse as parse_jsonpath
 
-from terravacuum import PExpressionParser, Context, ExpressionParsingResult
+from terravacuum.expression_parsing import PExpressionParser, ExpressionParsingResult
+from terravacuum.context import Context
 
 
 class MissingContextKeyError(Exception):

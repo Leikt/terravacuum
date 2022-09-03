@@ -1,8 +1,8 @@
 from typing import Any
 
 from .renderer import get_renderer
-from .component import PComponent
-from .context import Context
+from ..component import PComponent
+from ..context import Context
 
 
 def render_components(context: Context, components: list[PComponent]) -> list[Any]:

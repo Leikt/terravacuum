@@ -1,8 +1,8 @@
 from typing import Optional, Callable, Union
 
 from .component import PComponent
-from .context import Context
-from .plugin_system import PluginLoader, PluginItemNotFoundError
+from ..context import Context
+from ..plugin_system import PluginLoader, PluginItemNotFoundError
 
 
 class ComponentFactoryNotFound(PluginItemNotFoundError):

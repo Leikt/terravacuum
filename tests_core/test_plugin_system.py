@@ -1,6 +1,6 @@
 import unittest
 
-from terravacuum import PluginLoader
+from terravacuum.plugin_system import PluginLoader
 
 
 class TestPluginSystem(unittest.TestCase):

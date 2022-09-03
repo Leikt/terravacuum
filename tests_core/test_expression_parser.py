@@ -1,6 +1,9 @@
 import unittest
 
-from terravacuum import PluginLoader, parse_expression, create_context, register_plugin_sockets
+from terravacuum import register_plugin_sockets
+from terravacuum.plugin_system import PluginLoader
+from terravacuum.context import create_context
+from terravacuum.expression_parsing import parse_expression
 
 
 class TestExpressionParser(unittest.TestCase):

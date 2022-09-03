@@ -2,7 +2,7 @@ from typing import Optional, Any
 
 import yaml
 
-from terravacuum import PFileLoader
+from terravacuum.files import PFileLoader
 
 EXTENSION = '.yml'
 

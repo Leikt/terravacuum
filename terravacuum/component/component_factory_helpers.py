@@ -4,7 +4,7 @@ from typing import Any
 
 from .component import PComponent, get_component_class
 from .component_factory import WrongArgumentForComponentConstructor, get_component_factory
-from .context import Context, create_context
+from ..context import Context, create_context
 
 
 class WrongDataTypeError(Exception):

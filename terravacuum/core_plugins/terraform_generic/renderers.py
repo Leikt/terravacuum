@@ -1,9 +1,12 @@
 from typing import Any
 
-from terravacuum import RendererRegistration, PComponent, Context, parse_expression, get_renderer, \
-    create_context, save_to_file, render_components, change_working_directory
 from .components import BlankLinesComponent, CommentComponent, PropertyComponent, HeaderComponent, SectionComponent, \
     LoopComponent, ContainerComponent, FileComponent, ProjectComponent
+from terravacuum.rendering import RendererRegistration, get_renderer, render_components
+from terravacuum.files import save_to_file, change_working_directory
+from terravacuum.context import create_context, Context
+from terravacuum.expression_parsing import parse_expression
+from terravacuum.component import PComponent
 
 
 def register_renderers() -> RendererRegistration:

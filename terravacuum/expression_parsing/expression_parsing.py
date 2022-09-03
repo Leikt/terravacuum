@@ -2,8 +2,8 @@ import logging
 from enum import Enum
 from typing import Protocol, Any, Optional
 
-from .plugin_system import PluginLoader
-from .context import Context
+from ..plugin_system import PluginLoader
+from ..context import Context
 
 
 class ExpressionParsingResult(Enum):

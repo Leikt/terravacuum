@@ -3,7 +3,7 @@ import os
 from contextlib import contextmanager
 from typing import Protocol, Optional, Any
 
-from .plugin_system import PluginLoader
+from ..plugin_system import PluginLoader
 
 
 class PFileLoader(Protocol):

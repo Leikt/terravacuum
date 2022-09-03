@@ -1,9 +1,12 @@
 import unittest
 
 from mock_factories import MockComponent, MockParentComponent, MockWithChildrenComponent
-from terravacuum import PluginLoader, get_component_factory, \
-    WrongArgumentForComponentConstructor, ComponentFactoryNotFound, WrongDataTypeError, TooManyChildComponents, \
-    WrongInlineArgument, create_context, register_plugin_sockets, ComponentNotFound, get_component_class
+from terravacuum.component import get_component_factory, WrongArgumentForComponentConstructor, \
+    ComponentFactoryNotFound, get_component_class, ComponentNotFound, WrongDataTypeError, TooManyChildComponents, \
+    WrongInlineArgument
+from terravacuum.context import create_context
+from terravacuum.plugin_system import PluginLoader
+from terravacuum import register_plugin_sockets
 
 
 class TestComponentFactories(unittest.TestCase):

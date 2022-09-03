@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Union
 
-from terravacuum import ComponentRegistration, PComponent
+from terravacuum.component import PComponent, ComponentRegistration
 
 
 def register_components() -> ComponentRegistration:

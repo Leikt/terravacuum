@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Protocol
 
-from terravacuum import PluginLoader, PluginItemNotFoundError
+from ..plugin_system import PluginLoader, PluginItemNotFoundError
 
 
 class ComponentNotFound(PluginItemNotFoundError):

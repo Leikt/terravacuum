@@ -1,9 +1,12 @@
 import unittest
 
 from mock_factories import MockComponent, MockParentComponent
-from terravacuum import PluginLoader, get_component_factory, get_renderer, \
-    create_context, register_plugin_sockets, RendererNotFound
+from terravacuum import register_plugin_sockets
 from terravacuum.core_plugins import register_core_plugins
+from terravacuum.plugin_system import PluginLoader
+from terravacuum.rendering import RendererNotFound, get_renderer
+from terravacuum.context import create_context
+from terravacuum.component import get_component_factory
 
 
 class TestRendering(unittest.TestCase):

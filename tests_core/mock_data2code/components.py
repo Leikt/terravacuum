@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Union
 
-from terravacuum import ComponentFactoryRegistration, ComponentRegistration, ComponentFactoryReturn, component_factory, \
-    get_component_factory, Inline, Context
+from terravacuum.component import ComponentFactoryRegistration, ComponentRegistration, ComponentFactoryReturn, Inline, \
+    component_factory, get_component_factory
+from terravacuum.context import Context
 
 
 def register_component_factories() -> ComponentFactoryRegistration:

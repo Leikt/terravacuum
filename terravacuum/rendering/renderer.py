@@ -1,8 +1,8 @@
 from typing import Callable, Any
 
-from .component import PComponent
-from .context import Context
-from .plugin_system import PluginLoader, PluginItemNotFoundError
+from ..component import PComponent
+from ..context import Context
+from ..plugin_system import PluginLoader, PluginItemNotFoundError
 
 
 class RendererNotFound(PluginItemNotFoundError):
