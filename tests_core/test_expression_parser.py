@@ -58,3 +58,20 @@ class TestExpressionParser(unittest.TestCase):
         expr = "some word with spaces"
         result = parse_expression(expr, create_context(), True)
         self.assertEqual("\"{}\"".format(expr), result)
+
+    def test_raw_expression_parser(self):
+        data = {
+            'objects': [
+                {'v': 1},
+                {'v': 'a'},
+                {'v': True},
+            ]
+        }
+        expr = '$R.objects[*].v'
+        expected = [1, 'a', True]
+        actual = parse_expression(expr, create_context(data=data))
+        self.assertEqual(expected, actual)
+
+        expr = '~R.objects[*].v'
+        actual = parse_expression(expr, create_context(variables=data))
+        self.assertEqual(expected, actual)

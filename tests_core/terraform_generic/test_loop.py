@@ -30,7 +30,7 @@ class TestLoop(unittest.TestCase):
         ctx_component = create_context()
         component = factory(
             ctx_component,
-            {'through': '$.instances[*]', 'children': [{'property': 'name=Name value="{{~.client}} - {{$.name}}"'}]})
+            {'through': '$R.instances[*]', 'children': [{'property': 'name=Name value="{{~.client}} - {{$.name}}"'}]})
         data = {'instances': [{'name': 'A'}, {'name': 'B'}, {'name': 'C'}]}
         variables = {'client': 'D.CORP'}
         ctx_rendering = create_context(data=data, variables=variables)

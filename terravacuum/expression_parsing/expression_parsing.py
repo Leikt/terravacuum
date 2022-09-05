@@ -21,8 +21,7 @@ class PExpressionParser(Protocol):
 
 
 def parse_expression(expr: str, context: Context,
-                     quote_string_with_spaces: bool = False,
-                     first: bool = True
+                     quote_string_with_spaces: bool = False
                      ) -> Optional[Any]:
     """Parse the given expression in the context.
     If no parser is able to parse the expression, it is return unchanged."""
@@ -31,9 +30,6 @@ def parse_expression(expr: str, context: Context,
         code, result = parser.parse(expr, context)
         if code == ExpressionParsingResult.FAILURE:
             logging.error('Unable to parse the expression "{}"'.format(expr))
-
-    if first and isinstance(result, list):
-        result = result[0]
 
     if isinstance(result, str) and quote_string_with_spaces and ' ' in result:
         result = "\"{}\"".format(result)

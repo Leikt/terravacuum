@@ -35,11 +35,11 @@ def find_data(expr: str, dataset: Any) -> list[Any]:
     """Use the JsonPath to find data inside the dataset. If there is no matches it raises a KeyError."""
     found_data = parse_jsonpath(expr).find(dataset)
     if len(found_data) == 0:
-        raise KeyError('No data matches the JsonPath "{}"'.format(expr))
+        raise KeyError('No data matches the JsonPath "{}"\nDataset:\n{}'.format(expr, dataset))
     return list(map(lambda x: x.value, found_data))
 
 
-def _parse(expr: str, context: Context, key: str):
+def _parse(expr: str, context: Context, key: str) -> tuple[ExpressionParsingResult, list[Any]]:
     if key not in context:
         raise MissingContextKeyError(key, context)
     data = find_data(expr, context[key])
@@ -48,12 +48,22 @@ def _parse(expr: str, context: Context, key: str):
 
 def parse_variable(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
     """Parse the expression inside the variables."""
-    return _parse('$' + expr[1:], context, 'variables')
+    code, result = _parse('$' + expr[1:], context, 'variables')
+    return code, result[0]
 
 
 def parse_data(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
     """Parse the expression inside the data."""
-    return _parse(expr, context, 'data')
+    code, result = _parse(expr, context, 'data')
+    return code, result[0]
+
+
+def parse_raw_data(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
+    return _parse('$' + expr[2:], context, 'data')
+
+
+def parser_raw_variable(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
+    return _parse('$' + expr[2:], context, 'variables')
 
 
 def parse_nested(expression: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
@@ -61,7 +71,6 @@ def parse_nested(expression: str, context: Context) -> tuple[ExpressionParsingRe
     expressions = re.findall(PATTERN_NESTED_EXPRESSION, expression)
     for full_expr, expr in expressions:
         _, value = CoreExpressionParer.parse(expr, context)
-        value = value[0]
         expression = expression.replace(full_expr, str(value))
     return ExpressionParsingResult.SUCCESS, expression
 
@@ -71,5 +80,7 @@ PATTERN_NESTED_EXPRESSION = r'(\{\{ *(.*?) *\}\})'
 PARSERS = {
     r'^\$\.': parse_data,
     r'^~\.': parse_variable,
+    r'^\$R\.': parse_raw_data,
+    r'^~R\.': parser_raw_variable,
     PATTERN_NESTED_EXPRESSION: parse_nested,
 }

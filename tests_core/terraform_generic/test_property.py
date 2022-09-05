@@ -43,3 +43,34 @@ class TestProperty(unittest.TestCase):
         expected = f"\t\"{component.name}\" = {component.value}\n"
         actual = renderer(create_context(indentation=1), component)
         self.assertEqual(expected, actual)
+
+
+    def test_renderer_list(self):
+        factory = get_component_factory('property')
+        ctx_component = create_context()
+        component: PropertyComponent = factory(ctx_component,  # type: ignore
+                                               'name="PropertyA" value="$.list"')
+        renderer = get_renderer('property')
+        data = {'list': ['a', 'b', 'c']}
+        ctx_rendering = create_context(data=data)
+
+        expected = f'{component.name} = ["a", "b", "c"]\n'
+        actual = renderer(ctx_rendering, component)
+        self.assertEqual(expected, actual)
+
+    def test_renderer_list_json_compose(self):
+        factory = get_component_factory('property')
+        ctx_component = create_context()
+        component: PropertyComponent = factory(ctx_component,  # type: ignore
+                                               'name="PropertyB" value="$R.obj[*].v"')
+        renderer = get_renderer('property')
+        data = {'obj': [
+            {'v': 'test'},
+            {'v': 'test2'},
+            {'v': 3}
+        ]}
+        ctx_rendering = create_context(data=data)
+
+        actual = renderer(ctx_rendering, component)
+        expected = f'{component.name} = ["test", "test2", "3"]\n'
+        self.assertEqual(expected, actual)

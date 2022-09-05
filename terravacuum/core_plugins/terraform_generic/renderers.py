@@ -56,6 +56,8 @@ def render_property(context: Context, component: PComponent) -> str:
     component: PropertyComponent
     name = parse_expression(component.name, context, quote_string_with_spaces=True)
     value = parse_expression(component.value, context, quote_string_with_spaces=True)
+    if isinstance(value, list):
+        value = '["{}"]'.format('", "'.join(map(str, value)))
     return f"{tab(context)}{name} = {value}\n"
 
 
@@ -85,7 +87,7 @@ def render_section(context: Context, component: PComponent) -> str:
 def _get_loop_data(context: Context, original_data: Any) -> list:
     data = original_data
     if isinstance(data, str):
-        data = parse_expression(data, context, first=False)
+        data = parse_expression(data, context)
     if not isinstance(data, list):
         raise DataTypeError('list', data, original_data)
     return data
