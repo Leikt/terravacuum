@@ -31,12 +31,12 @@ class CoreExpressionParer:
         return ExpressionParsingResult.NOT_PARSED, expr
 
 
-def find_data(expr: str, dataset: Any) -> Optional[Any]:
+def find_data(expr: str, dataset: Any) -> list[Any]:
     """Use the JsonPath to find data inside the dataset. If there is no matches it raises a KeyError."""
     found_data = parse_jsonpath(expr).find(dataset)
     if len(found_data) == 0:
         raise KeyError('No data matches the JsonPath "{}"'.format(expr))
-    return found_data[0].value
+    return list(map(lambda x: x.value, found_data))
 
 
 def _parse(expr: str, context: Context, key: str):
@@ -61,6 +61,7 @@ def parse_nested(expression: str, context: Context) -> tuple[ExpressionParsingRe
     expressions = re.findall(PATTERN_NESTED_EXPRESSION, expression)
     for full_expr, expr in expressions:
         _, value = CoreExpressionParer.parse(expr, context)
+        value = value[0]
         expression = expression.replace(full_expr, str(value))
     return ExpressionParsingResult.SUCCESS, expression
 

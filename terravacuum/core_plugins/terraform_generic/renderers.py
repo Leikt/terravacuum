@@ -85,7 +85,7 @@ def render_section(context: Context, component: PComponent) -> str:
 def _get_loop_data(context: Context, original_data: Any) -> list:
     data = original_data
     if isinstance(data, str):
-        data = parse_expression(data, context)
+        data = parse_expression(data, context, first=False)
     if not isinstance(data, list):
         raise DataTypeError('list', data, original_data)
     return data

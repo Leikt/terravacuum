@@ -14,6 +14,8 @@ def register_file_loaders() -> tuple[str, PFileLoader]:
 class JsonFileLoader:
     """Load and save json files."""
 
+    __serializers: list = []
+
     @staticmethod
     def load_file(filename: str) -> Optional[Any]:
         if not filename.endswith(EXTENSION):
@@ -29,5 +31,17 @@ class JsonFileLoader:
             return False
 
         with open(filename, 'w') as file:
-            file.write(json.dumps(data))
+            file.write(json.dumps(data, default=JsonFileLoader.serialize))
         return True
+
+    @classmethod
+    def add_serializer(cls, function):
+        cls.__serializers.append(function)
+
+    @classmethod
+    def serialize(cls, obj):
+        for serializer in cls.__serializers:
+            result = serializer(obj)
+            if result:
+                return result
+        return obj

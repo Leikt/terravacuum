@@ -2,7 +2,7 @@ project:
   directory: "master_render/"
   children:
     - loop:
-        through: $.persons
+        through: $.persons[*]
         children:
           - include: person.yml
     - file:
