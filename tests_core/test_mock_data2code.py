@@ -11,9 +11,9 @@ from terravacuum.rendering import get_renderer
 TEMPLATE = {
     'header': '$.name',
     'lines': [
-        {'m2d-line': {'code': ['say_hello("{{$.persons.A}}")']}},
-        {'m2d-line': 'say_goodbye("{{$.persons.B}}")'},
-        {'m2d-line': ['x = {{ $.base_value }} + get_count()', 'new_var=yolooooooo']},
+        {'m2d-line': {'code': ['$$.say_hello("{{$.persons.A}}")']}},
+        {'m2d-line': '$$.say_goodbye("{{$.persons.B}}")'},
+        {'m2d-line': ['$$.x = {{ $.base_value }} + get_count()', 'new_var=yolooooooo']},
     ],
     'quick_lines': [
         'hello = print("hello")',

@@ -26,8 +26,9 @@ class CoreExpressionParer:
     @staticmethod
     def parse(expr: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
         for template, parser in PARSERS.items():
-            if re.search(template, expr):
-                return parser(expr, context)
+            if not expr.startswith(template):
+                continue
+            return parser(expr, context)
         return ExpressionParsingResult.NOT_PARSED, expr
 
 
@@ -67,7 +68,8 @@ def parser_raw_variable(expr: str, context: Context) -> tuple[ExpressionParsingR
 
 
 def parse_nested(expression: str, context: Context) -> tuple[ExpressionParsingResult, Optional[Any]]:
-    """Process nested expressions like "Name={{ $.employee.name }}" """
+    """Process nested expressions like "$$.Name={{ $.employee.name }}" """
+    expression = expression[3:]
     expressions = re.findall(PATTERN_NESTED_EXPRESSION, expression)
     for full_expr, expr in expressions:
         _, value = CoreExpressionParer.parse(expr, context)
@@ -78,9 +80,9 @@ def parse_nested(expression: str, context: Context) -> tuple[ExpressionParsingRe
 PATTERN_NESTED_EXPRESSION = r'(\{\{ *(.*?) *\}\})'
 
 PARSERS = {
-    r'^\$\.': parse_data,
-    r'^~\.': parse_variable,
-    r'^\$R\.': parse_raw_data,
-    r'^~R\.': parser_raw_variable,
-    PATTERN_NESTED_EXPRESSION: parse_nested,
+    '$.': parse_data,
+    '~.': parse_variable,
+    '$R.': parse_raw_data,
+    '~R.': parser_raw_variable,
+    '$$.': parse_nested,
 }

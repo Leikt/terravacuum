@@ -33,15 +33,15 @@ class TestExpressionParser(unittest.TestCase):
     def test_nested_expression(self):
         data = {'name': 'Jean Dupont', 'age': 32}
         context = create_context(data=data)
-        self.assertEqual(f"Name={data['name']}", parse_expression("Name={{ $.name }}", context))
+        self.assertEqual(f"Name={data['name']}", parse_expression("$$.Name={{ $.name }}", context))
         self.assertEqual(f"Age={data['age']} Name={data['name']}",
-                         parse_expression("Age={{ $.age }} Name={{ $.name }}", context))
+                         parse_expression("$$.Age={{ $.age }} Name={{ $.name }}", context))
 
     def test_complex_nested_expression(self):
         data = {'name': 'Jean Dupont', 'age': 32}
         context = create_context(data=data, variables=data)
         self.assertEqual(f"Age={data['age']} Name={data['name']}",
-                         parse_expression("Age={{ $.age }} Name={{ ~.name }}", context))
+                         parse_expression("$$.Age={{ $.age }} Name={{ ~.name }}", context))
 
     def test_key_error(self):
         context = create_context(data={'name': 'Jean Dupont', 'age': 32})
