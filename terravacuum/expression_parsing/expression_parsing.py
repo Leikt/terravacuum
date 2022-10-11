@@ -31,6 +31,6 @@ def parse_expression(expr: str, context: Context,
         if code == ExpressionParsingResult.FAILURE:
             logging.error('Unable to parse the expression "{}"'.format(expr))
 
-    if isinstance(result, str) and quote_string_with_spaces and ' ' in result:
+    if isinstance(result, str) and quote_string_with_spaces and (' ' in result or ',' in result):
         result = "\"{}\"".format(result)
     return result
