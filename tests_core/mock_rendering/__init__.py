@@ -1,6 +1,8 @@
 from mock_factories import MockComponent, MockParentComponent
-from terravacuum import Context, PComponent, parse_expression, get_renderer
-from terravacuum import RendererRegistration
+from terravacuum.context import Context
+from terravacuum.component import PComponent
+from terravacuum.rendering import get_renderer, RendererRegistration
+from terravacuum.expression_parsing import parse_expression
 
 
 def register_renderers() -> RendererRegistration:

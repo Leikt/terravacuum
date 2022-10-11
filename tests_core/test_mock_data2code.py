@@ -1,16 +1,19 @@
 import unittest
 
 from mock_data2code.components import FunctionComponent
-from terravacuum import PluginLoader, get_renderer, get_component_factory, \
-    create_context, register_plugin_sockets
+from terravacuum import register_plugin_sockets
 from terravacuum.core_plugins import register_core_plugins
+from terravacuum.plugin_system import PluginLoader
+from terravacuum.component import get_component_factory
+from terravacuum.context import create_context
+from terravacuum.rendering import get_renderer
 
 TEMPLATE = {
     'header': '$.name',
     'lines': [
-        {'m2d-line': {'code': ['say_hello("{{$.persons.A}}")']}},
-        {'m2d-line': 'say_goodbye("{{$.persons.B}}")'},
-        {'m2d-line': ['x = {{ $.base_value }} + get_count()', 'new_var=yolooooooo']},
+        {'m2d-line': {'code': ['$$.say_hello("{{$.persons.A}}")']}},
+        {'m2d-line': '$$.say_goodbye("{{$.persons.B}}")'},
+        {'m2d-line': ['$$.x = {{ $.base_value }} + get_count()', 'new_var=yolooooooo']},
     ],
     'quick_lines': [
         'hello = print("hello")',

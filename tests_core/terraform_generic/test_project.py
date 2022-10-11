@@ -2,8 +2,11 @@ import os
 import shutil
 import unittest
 
-from terravacuum import get_component_factory, get_renderer, create_context, \
-    load_file, register_plugin_sockets
+from terravacuum import register_plugin_sockets
+from terravacuum.context import create_context
+from terravacuum.component import get_component_factory
+from terravacuum.rendering import get_renderer
+from terravacuum.files import load_file
 from terravacuum.core_plugins import register_core_plugins
 from terravacuum.core_plugins.terraform_generic.components import ProjectComponent
 

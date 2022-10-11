@@ -1,5 +1,9 @@
 from mock_data2code.components import FunctionHeaderComponent, CodeLineComponent, FunctionComponent
-from terravacuum import RendererRegistration, Context, PComponent, parse_expression, get_renderer, create_context
+
+from terravacuum.rendering import RendererRegistration, get_renderer
+from terravacuum.context import Context, create_context
+from terravacuum.component import PComponent
+from terravacuum.expression_parsing import parse_expression
 
 
 def register_renderers() -> RendererRegistration:

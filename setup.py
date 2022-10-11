@@ -10,7 +10,7 @@ AUTHOR = 'Leikt Sol\'Reihin'
 AUTHOR_EMAIL = 'leikt.solreihin@gmail.com'
 URL = 'https://github.com/Leikt/terravacuum'
 PACKAGES = ['terravacuum']
-PACKAGE_DIR = {'terravacuum': 'src/terravacuum'}
+PACKAGE_DIR = {'terravacuum': 'terravacuum' }
 PACKAGE_DATA = {}
 DATA_FILES = []
 

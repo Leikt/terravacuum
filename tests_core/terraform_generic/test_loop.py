@@ -1,6 +1,9 @@
 import unittest
 
-from terravacuum import get_component_factory, get_renderer, create_context, register_plugin_sockets
+from terravacuum import register_plugin_sockets
+from terravacuum.context import create_context
+from terravacuum.component import get_component_factory
+from terravacuum.rendering import get_renderer
 from terravacuum.core_plugins import register_core_plugins
 from terravacuum.core_plugins.terraform_generic.components import LoopComponent, PropertyComponent
 
@@ -27,7 +30,7 @@ class TestLoop(unittest.TestCase):
         ctx_component = create_context()
         component = factory(
             ctx_component,
-            {'through': '$.instances', 'children': [{'property': 'name=Name value="{{~.client}} - {{$.name}}"'}]})
+            {'through': '$R.instances[*]', 'children': [{'property': 'name=Name value="$$.{{~.client}} - {{$.name}}"'}]})
         data = {'instances': [{'name': 'A'}, {'name': 'B'}, {'name': 'C'}]}
         variables = {'client': 'D.CORP'}
         ctx_rendering = create_context(data=data, variables=variables)

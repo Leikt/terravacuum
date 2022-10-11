@@ -1,7 +1,11 @@
 import unittest
 
 from mock_factories import MockComponent
-from terravacuum import PluginLoader, load_file, create_component, create_context, register_plugin_sockets
+from terravacuum.plugin_system import PluginLoader
+from terravacuum import register_plugin_sockets
+from terravacuum.context import create_context
+from terravacuum.files import load_file
+from terravacuum.component import create_component
 from terravacuum.core_plugins import register_core_plugins
 
 

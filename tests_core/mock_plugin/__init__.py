@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from terravacuum import PluginLoader, PluginItemNotFoundError
+from terravacuum.plugin_system import PluginLoader, PluginItemNotFoundError
 
 
 @dataclass
